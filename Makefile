@@ -24,7 +24,7 @@ depend: $(CSRC)
 
 clean:
 	rm -rf $(OBJDIR) $(TOCLEAN)
-	rm memorizer
+	rm -f memorizer
 
 .PHONY: objs depend clean
 
