@@ -29,3 +29,6 @@ clean:
 .PHONY: objs depend clean
 
 
+# DO NOT DELETE
+
+outsrc/database.o: src/database.h src/common.h
