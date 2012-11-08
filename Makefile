@@ -14,7 +14,7 @@ memorizer: $(CSRC)
 
 objs: $(OBJDIR) $(OBJS)
 $(OBJDIR)/%.o: src/%.c
-	$(CC) $(CFLAGS) $(INC) -c $< -o $@
+	$(CC) $(CCFLAGS) $(INC) -c $< -o $@
 $(OBJDIR):
 	mkdir -p $(OBJDIR)
 
@@ -31,4 +31,5 @@ clean:
 
 # DO NOT DELETE
 
-outsrc/database.o: src/database.h src/common.h
+outsrc/database.o: src/database.h src/common.h src/wordSelector.h
+outsrc/wordSelector.o: src/wordSelector.h src/common.h

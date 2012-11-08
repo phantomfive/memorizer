@@ -7,9 +7,9 @@ We use this algorithm:
    show the local language.
 3. Try to show a lot of known words, don't overwhelm with discomfort.
 4. groups of words:
-      A) unknown words.
-		B) familiar, can recognize it in foreign language and type in native.
-		   can type it in foreign language given the native language.
-		C) At that point, move it to the next group, start showing it less
+      A) Unknown words.
+		B) Familiar, can recognize it in foreign language and type in native.
+		C) Can type it in foreign language given the native language.
+	      At that point, start showing it less
 		D) Finally, once it is well known, show it based on least recently seen
 
