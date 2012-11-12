@@ -3,7 +3,7 @@
 	Do not remove this copyright notice. */
 
 #include <sqlite3.h>
-#include "database.h"
+#include "wordDatabase.h"
 
 
 

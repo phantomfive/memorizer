@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "database.h"
+#include "wordDatabase.h"
 
 #include "wordSelector.h"
 
@@ -11,7 +11,7 @@ static BOOL getWordForGroupA(WordForReview **word, int index);
 static BOOL getWordForGroupB(WordForReview **word, int index);
 static BOOL getWordForGroupC(WordForReview **word, int index);
 static BOOL getWordForGroupD(WordForReview **word, int index);
-
+static BOOL getWordForGroupE(WordForReview **word, int index);
 //---------------------------------------------------------------------------------
 //Public methods
 //---------------------------------------------------------------------------------

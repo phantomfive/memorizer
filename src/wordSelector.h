@@ -7,7 +7,8 @@ typedef enum WordGroupTypeEnum {
 	WordGroupA=1,
 	WordGroupB=2,
 	WordGroupC=3,
-	WordGroupD=4
+	WordGroupD=4,
+	WordGroupE=5
 } WordGroupType;
 
 typedef struct WordForReviewStruct {
