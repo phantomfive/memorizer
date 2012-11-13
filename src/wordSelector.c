@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 
 #include "wordDatabase.h"
@@ -37,8 +38,94 @@ BOOL selectWordsForReview(WordForReview **words, int quantity) {
 	return SUCCESS;
 }
 
-void markWordAsReviewed(WordForReview *word, BOOL result) {
+BOOL addNewWordForReview(const char *localWord, const char *foreignWord,
+                         const char *language) {
+	WordForReview word;
+	strncpy(word.language, language, sizeof(word.language));
+	word.language[sizeof(word.language)-1] = 0;
 
+	strncpy(word.localWord, localWord, sizeof(word.localWord));
+	word.localWord[sizeof(word.localWord)-1] = 0;
+
+	strncpy(word.foreignWord, foreignWord, sizeof(word.foreignWord));
+	word.foreignWord[sizeof(word.foreignWord)-1] = 0;
+
+	word.type = WordGroupA;
+	word.competencyLevel = 0;
+
+	return databaseAddWord(&word);
+}
+
+
+//This function is too long.......
+#define COMPETENCY_B 5
+#define COMPETENCY_C 10
+#define COMPETENCY_D 15
+#define COMPETENCY_E 10
+BOOL markWordAsReviewed(WordForReview *word, BOOL result) {
+	
+	//if it's wordGroupA, then we move it to B automatically, since they
+	//only need to see it to get out of A
+	if(word->type==WordGroupA) {
+		word->type = WordGroupB;
+		word->competencyLevel = 0;
+	   return databaseUpdateWord(word);
+	}
+
+	//in all the other groups, adjust the competency level
+	if(result) word->competencyLevel++;
+	else       word->competencyLevel--;
+	
+	
+	//if it's in group B, then once the competency level hits a
+	//certain level, move it to the next group
+	if(word->type==WordGroupB) {
+		if(word->competencyLevel>=COMPETENCY_B) {
+			word->type = WordGroupC;
+			word->competencyLevel = 0;
+		}else if(word->competencyLevel<=-COMPETENCY_B) {
+			word->type = WordGroupA;
+			word->competencyLevel = 0;
+		}
+	}
+	
+	//if it's in group C, then once the competency level hits a
+	//certain level, move it to the next group
+	if(word->type==WordGroupC) {
+		if(word->competencyLevel>=COMPETENCY_C) {
+			word->type = WordGroupD;
+			word->competencyLevel = 0;
+		}else if(word->competencyLevel<=-COMPETENCY_C) {
+			word->type = WordGroupB;
+			word->competencyLevel = 0;
+		}
+	}
+
+	//if it's in group D, then once the competency level hits a
+	//certain level, move it to the next group
+	if(word->type==WordGroupD) {
+		if(word->competencyLevel>=COMPETENCY_D) {
+			word->type = WordGroupE;
+			word->competencyLevel = 0;
+		}else if(word->competencyLevel<=-COMPETENCY_D) {
+			word->type = WordGroupC;
+			word->competencyLevel = 0;
+		}
+	}
+
+	//if it's in group E, then it stays there. If the competency
+	//gets too low, we'll move it back to D, though
+	if(word->type==WordGroupE) {
+		if(word->competencyLevel<= -COMPETENCY_E) {
+			word->type = WordGroupD;
+			word->competencyLevel = 0;
+		}
+	}
+
+	//ok, there was more repetition in that section than is healthy.
+	//However, I might want to change the behavior of each word type individually
+	//later on, so it's probably ok.
+	return databaseUpdateWord(word);
 }
 
 

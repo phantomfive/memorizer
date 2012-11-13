@@ -29,8 +29,11 @@ BOOL selectWordsForReview(WordForReview **words, int quantity);
 
 /** Call this after a word gets reviewed, to update the database as to the
     result. Send in the word, and SUCCESS if they got it, or FAIL if they didn't.
-	 'word' gets updated with the new data */
-void markWordAsReviewed(WordForReview *word, BOOL result);
+	 'word' gets updated with the new data. Returns FAIL if there's a database error.*/
+BOOL markWordAsReviewed(WordForReview *word, BOOL result);
 
+/** Adds a word to the database */
+BOOL addNewWordForReview(const char *localWord,  const char *foreignWord, 
+                         const char *language);
 #endif
 

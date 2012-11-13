@@ -29,5 +29,12 @@ BOOL databaseFillWordFromGroupOrderByLeastSkilled(WordForReview **word, int inde
 /**Returns the number of words in a given group in the database*/
 int databaseGetCountForWordGroup(WordGroupType type);
 
+/** Updates the word according to its ID anything that's changed in the struct
+  * will be changed in the database.*/
+BOOL databaseUpdateWord(const WordForReview *word);
+
+/**Adds a word to the database*/
+BOOL databaseAddWord(const WordForReview *word);
+
 #endif
 
