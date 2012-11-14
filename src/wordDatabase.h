@@ -8,22 +8,28 @@
 #include "common.h"
 #include "wordSelector.h"
 
-/** Should fill the array at 'index' randomly with a given word from the word group.
-  * expects every space in the array before 'index' to be filled in, and will not
-  * duplicate these words. Returns SUCCESS or FAIL */
-BOOL databaseFillWordFromGroup(WordForReview **word, int index, WordGroupType type);
+#define DATABASE_NAME "data.db"
+#define DATABASE_VERSION 1
 
-/** Should fill the array at 'index' with a given word from the word group. Expects
-  * every space in the array before 'index' to be filled in, and will not duplicate   
-  * these words. Orders by the least recently reviewed. Returns SUCCESS or FAIL*/
-BOOL databaseFillWordFromGroupOrderByLeastRecent(WordForReview **word, int index,
+/** Should fill the array at 'index' randomly with a given word from the word 
+  * group. expects every space in the array before 'index' to be filled in, and
+  * will not duplicate these words. Returns SUCCESS or FAIL */
+BOOL databaseFillWordFromGroup(WordForReview **word, int index, 
+                               WordGroupType type);
+
+/** Should fill the array at 'index' with a given word from the word group. 
+  * Expects every space in the array before 'index' to be filled in, and will 
+  * not duplicate these words. Orders by the least recently reviewed. 
+  * Returns SUCCESS or FAIL*/
+BOOL databaseFillWordFromGroupOrderByLeastRecent(WordForReview**word, int index,
                                                  WordGroupType type);
 
-/** Should fill the array at 'index' with a given word from the word group. Expects
-  * every space in the array before 'index' to be filled in, and will not duplicate
-  * these words. Returns SUCCESS or FAIL*/
-BOOL databaseFillWordFromGroupOrderByLeastSkilled(WordForReview **word, int index,
-                                                 WordGroupType type);
+/** Should fill the array at 'index' with a given word from the word group. 
+  * Expects every space in the array before 'index' to be filled in, and will 
+  * not duplicate these words. Returns SUCCESS or FAIL*/
+BOOL databaseFillWordFromGroupOrderByLeastSkilled(WordForReview **word, 
+                                                  int index,
+                                                  WordGroupType type);
 
 
 /**Returns the number of words in a given group in the database*/
