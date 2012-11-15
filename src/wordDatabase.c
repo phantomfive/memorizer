@@ -1,5 +1,7 @@
 /** Copyright 2012 by Andrew. Usable under the terms of the GPL */
 
+#include <stdlib.h>
+#include <stdio.h>
 #include <sqlite3.h>
 #include "wordDatabase.h"
 
@@ -16,46 +18,65 @@ static BOOL getSingleIntegerFromQuery(const char *query, int size, int *result);
 #define CORRECT_VERSION   1
 #define INCORRECT_VERSION 2
 #define VERSION_ERROR     3
-static BOOL checkVersion();
+static int checkVersion();
 
-//---------------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 // public API
-//---------------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 BOOL databaseFillWordFromGroup(WordForReview **word, int index, 
                                WordGroupType type) {
 	if(!init()) return FAIL;
+
+	return FAIL;
 }
 
 BOOL databaseFillWordFromGroupOrderByLeastRecent(WordForReview**word, int index,
                                                  WordGroupType type) {
 	if(!init()) return FAIL;
+
+	return FAIL;
 }
 
 
 BOOL databaseFillWordFromGroupOrderByLeastSkilled(WordForReview**word,int index,
                                                  WordGroupType type) {
 	if(!init()) return FAIL;
+
+	return FAIL;
 }
 
 
 int databaseGetCountForWordGroup(WordGroupType type) {
 	if(!init()) return FAIL;
+
+	return FAIL;
 }
 
 BOOL databaseUpdateWord(const WordForReview *word) {
 	if(!init()) return FAIL;
 
+	return FAIL;
 }
 
 BOOL databaseAddWord(const WordForReview *word) {
+	char query[1000];
 	if(!init()) return FAIL;
 
+	snprintf(query,sizeof(query), 
+	         "INSERT INTO words\n"\
+	         "(language, localWord, foreignWord, competencyLevel, type)\n"\
+				"VALUES\n"\
+				"(%s, %s, %s, %d, %d)\n",
+				word->language, word->localWord, word->foreignWord,
+				word->competencyLevel, word->type);
+	
+	return runResultlessQuery(query, sizeof(query));
 }
 
 //---------------------------------------------------------------------------------
 // private methods
 //---------------------------------------------------------------------------------
-static BOOL initialzed = NO;
+static BOOL initialized = NO;
 
 /**initialzes the database, if it hasn't been done already. OK to call twice.
   *If the database hasn't been created yet, this will create it.
@@ -67,14 +88,14 @@ static BOOL init() {
 	//open the database
 	result = sqlite3_open(DATABASE_NAME, &db);
 	if(result!=SQLITE_OK) {
-		printf("Couldn't open database: %s\n", sqlite3_errmsg(&db));
+		printf("Couldn't open database: %s\n", sqlite3_errmsg(db));
 		return FAIL;
 	}
 	
 	//check the database version
 	int versionResult = checkVersion();
-	if(version==CORRECT_VERSION) return SUCCESS;
-	if(version==INCORRECT_VERSION) {
+	if(versionResult==CORRECT_VERSION) return SUCCESS;
+	if(versionResult==INCORRECT_VERSION) {
 		sqlite3_close(db);
 		return FAIL;
 	}
@@ -98,9 +119,9 @@ static BOOL createSchema() {
 	snprintf(query, sizeof(query), 
 	                         "CREATE TABLE WORDS(\n"\
 	                         "id INTEGER PRIMARY KEY AUTOINCREMENT,\n"\
-									 "language VARCHAR[%d],\n"\
-	                         "localWord VARCHAR[%d],\n"\
-									 "foreignWord VARCHAR[%d],\n"\
+									 "language VARCHAR[%lu],\n"\
+	                         "localWord VARCHAR[%lu],\n"\
+									 "foreignWord VARCHAR[%lu],\n"\
 									 "competencyLevel INTEGER,\n"\
 									 "type             INTEGER,\n"\
 									 "lastReviewedTime  INTEGER);\n",
@@ -132,13 +153,14 @@ static BOOL createSchema() {
   * prints an error message on error, and returns FAIL*/
 static BOOL runResultlessQuery(const char *query, int querySize) {
 	sqlite3_stmt *ppStmt;
-
-	if(sqlite3_prepare_v2(db, query, sizeof(query), &ppStmt, null)!=SQLITE_OK)
-		return handleError("Error while creating table 2", ppStmt);
-	if(sqlite3_step(ppStmt) !=SQLITE_OK)
-		return handleError("Error while stepping while creating table 2", ppStmt);
-	if(sqlite3_finalize(ppStmpt) != SQLITE_OK)
-		return handleError("Error while finalize while creating table 2", NULL);
+	int result;
+	if(sqlite3_prepare_v2(db, query, querySize, &ppStmt, NULL)!=SQLITE_OK)
+		return handleError("Error while runningQuery", ppStmt);
+	result = sqlite3_step(ppStmt);
+	if(result!=SQLITE_DONE && result!=SQLITE_ROW)
+		return handleError("Error while stepping query", ppStmt);
+	if(sqlite3_finalize(ppStmt) != SQLITE_OK)
+		return handleError("Error while finalizing query", NULL);
 
 	return SUCCESS;
 }
@@ -162,13 +184,13 @@ static int checkVersion() {
 
 	//query the database
 	snprintf(query, sizeof(query), "SELECT VERSION FROM GLOBAL");
-	if(getSingleIntegerFromQuery(query, sizeof(query), &result)!=SUCCESS)
+	if(getSingleIntegerFromQuery(query, sizeof(query), &version)!=SUCCESS)
 		return VERSION_ERROR;
 	
 	//check the version
 	if(version==DATABASE_VERSION)
 		return CORRECT_VERSION;
-	fprintf("Incompatible database version: expected %d, got %d\n",
+	fprintf(stderr,"Incompatible database version: expected %d, got %d\n",
 	        DATABASE_VERSION, version);
 	return INCORRECT_VERSION;
 }
@@ -177,6 +199,18 @@ static int checkVersion() {
   * resultant query. Puts the result in 'result', which shouldn't be NULL.
   * returns SUCESS or FAIL on error, and DOESN'T print an error*/
 static BOOL getSingleIntegerFromQuery(const char*query, int size, int*result) {
+	sqlite3_stmt *ppStmt;
 
+	if(sqlite3_prepare_v2(db, query, size, &ppStmt, NULL)!=SQLITE_OK)
+		return handleError("Error while running int query", ppStmt);
+	if(sqlite3_step(ppStmt) !=SQLITE_ROW)
+		return handleError("Error while stepping int query", ppStmt);
+	
+	*result = sqlite3_column_int(ppStmt, 0);
+
+	if(sqlite3_finalize(ppStmt) != SQLITE_OK)
+		return handleError("Error while finalizing int query", NULL);
+	
+	return SUCCESS;
 }
 

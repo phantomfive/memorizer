@@ -1,6 +1,6 @@
 CC=gcc
 CCFLAGS=-Wall -Werror -std=c99 -ggdb
-LDFLAGS=
+LDFLAGS= -lsqlite3
 
 OBJDIR=out
 
@@ -31,5 +31,5 @@ clean:
 
 # DO NOT DELETE
 
-outsrc/database.o: src/database.h src/common.h src/wordSelector.h
-outsrc/wordSelector.o: src/wordSelector.h src/common.h
+outsrc/wordDatabase.o: src/wordDatabase.h src/common.h src/wordSelector.h
+outsrc/wordSelector.o: src/wordDatabase.h src/common.h src/wordSelector.h

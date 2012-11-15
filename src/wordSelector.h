@@ -28,8 +28,8 @@ typedef struct WordForReviewStruct {
 BOOL selectWordsForReview(WordForReview **words, int quantity);
 
 /** Call this after a word gets reviewed, to update the database as to the
-    result. Send in the word, and SUCCESS if they got it, or FAIL if they didn't.
-	 'word' gets updated with the new data. Returns FAIL if there's a database error.*/
+    result. Send in the word, and SUCCESS if they got it, or FAIL otherwise.
+	 'word' gets updated with the new data. Fails only on database error.*/
 BOOL markWordAsReviewed(WordForReview *word, BOOL result);
 
 /** Adds a word to the database */
