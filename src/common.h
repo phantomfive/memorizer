@@ -27,6 +27,10 @@
 #define FAIL FALSE
 #endif
 
+/** Tries to append src to dest, which should both be NULL terminated.
+  * destSize should be the total space available in dest. If there is
+  * not enough room, will return FAIL without changing anything*/
+BOOL strncatSafe(char *dest, char *src, int destSize);
 
 
 #endif

@@ -1,4 +1,6 @@
-/** Copyright 2012 by Andrew. Usable under the terms of the GPL */
+/** Copyright 2012 by Andrew. Usable under the terms of the GPL 
+	 Interfacing with the database turned out to be the most difficult
+	 part but it was still easier than writing a custom solution.*/
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -17,7 +19,11 @@ static BOOL runResultlessQuery(const char *query, int querySize);
 static BOOL getSingleIntegerFromQuery(const char *query, int size, int *result);
 static BOOL getLastReviewTime(int *lastReviewTime);
 static BOOL incrementLastReviewTime();
+static BOOL fillWordFromQuery(char *query, WordForReview *word);
+static BOOL postpendOmitDuplicates(char *query, int querySize, 
+                                   WordForReview*word, int index);
 
+//The following constants are for use with checkVersion()
 #define CORRECT_VERSION   1
 #define INCORRECT_VERSION 2
 #define VERSION_ERROR     3
@@ -26,39 +32,106 @@ static int checkVersion();
 //----------------------------------------------------------------------------
 // public API
 //----------------------------------------------------------------------------
-BOOL databaseFillWordFromGroup(WordForReview **word, int index, 
+BOOL databaseFillWordFromGroup(WordForReview *word, int index, 
                                WordGroupType type) {
+	char query[10000];
 	if(!init()) return FAIL;
+	
+	snprintf(query, sizeof(query), "SELECT * FROM WORDS where type=%d",
+	                               type);
 
-	return FAIL;
+	postpendOmitDuplicates(query, sizeof(query), word, index);
+	word[0].id = 1;
+	printf("chose index %d\n", index);
+	if(!fillWordFromQuery(query, &word[index])) {
+		fprintf(stderr, "Couldn't fill word from group\n");
+		return FAIL;
+	}
+	return SUCCESS;
 }
 
-BOOL databaseFillWordFromGroupOrderByLeastRecent(WordForReview**word, int index,
+BOOL databaseFillWordFromGroupOrderByLeastRecent(WordForReview*word, int index,
                                                  WordGroupType type) {
+	char query[10000];
 	if(!init()) return FAIL;
 
-	return FAIL;
+	snprintf(query, sizeof(query), "SELECT * FROM WORDS where type=%d", type);
+	postpendOmitDuplicates(query, sizeof(query), word, index);
+	strncatSafe(query, " ORDER BY lastReviewedTime LIMIT 1", sizeof(query));
+	
+
+	if(!fillWordFromQuery(query, &word[index])) {
+		fprintf(stderr, "Couldn't fill word from group order by least recent\n");
+		return FAIL;
+	}
+
+	return SUCCESS;
 }
 
 
-BOOL databaseFillWordFromGroupOrderByLeastSkilled(WordForReview**word,int index,
+BOOL databaseFillWordFromGroupOrderByLeastSkilled(WordForReview*word,int index,
                                                  WordGroupType type) {
+	char query[10000];	
 	if(!init()) return FAIL;
+	
+	snprintf(query, sizeof(query),  "SELECT * FROM WORDS where type=%d", type);
+	postpendOmitDuplicates(query, sizeof(query), word, index);
+	strncatSafe(query, " ORDER BY competencyLevel LIMIT 1", sizeof(query));
 
-	return FAIL;
+	if(!fillWordFromQuery(query, &word[index])){
+		fprintf(stderr, "Couldn't fill word ordered by least skilled\n");
+		return FAIL;
+	}
+
+	return SUCCESS;
 }
 
 
-int databaseGetCountForWordGroup(WordGroupType type) {
+BOOL databaseGetCountForWordGroup(WordGroupType type, int *count) {
+	char query[1000];
 	if(!init()) return FAIL;
 
-	return FAIL;
+	snprintf(query,sizeof(query),
+	               "SELECT COUNT (*) FROM WORDS WHERE type=%d", type);
+
+	if(!getSingleIntegerFromQuery(query, sizeof(query), count)) {
+		fprintf(stderr, "Failed getting count for word group\n");
+		return FAIL;
+	}
+
+	return SUCCESS;
 }
 
 BOOL databaseUpdateWord(const WordForReview *word) {
+	int lastReviewedTime = -1;
+	char query[1000];
 	if(!init()) return FAIL;
 
-	return FAIL;
+	if(!getLastReviewTime(&lastReviewedTime)) {
+		fprintf(stderr, "Couldn't get last review time\n");
+		return FAIL;
+	}
+
+	snprintf(query, sizeof(query),
+	         "UPDATE WORDS SET language='%s', localWord='%s',"\
+				                 "foreignWord='%s', competencyLevel=%d, "\
+									  "type=%d, lastReviewedTime='%d' "\
+									  " WHERE id=%d",
+			   word->language, word->localWord, word->foreignWord,
+				word->competencyLevel, word->type, lastReviewedTime, word->id);
+	
+	printf("running query: %s\n", query);
+	
+	if(!runResultlessQuery(query, sizeof(query))) {
+		printf("Couldn't update word!\n");
+		return FAIL;
+	}
+
+	if(!incrementLastReviewTime()) {
+		fprintf(stderr, "Updated word, but couldn't update review time!\n");
+		return SUCCESS;
+	}
+	return SUCCESS;
 }
 
 BOOL databaseAddWord(const WordForReview *word) {
@@ -93,9 +166,9 @@ BOOL databaseAddWord(const WordForReview *word) {
 	return SUCCESS;
 }
 
-//---------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // private methods
-//---------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 static BOOL initialized = NO;
 
 /**initialzes the database, if it hasn't been done already. OK to call twice.
@@ -152,8 +225,8 @@ static BOOL createSchema() {
 									 "competencyLevel INTEGER,\n"\
 									 "type             INTEGER,\n"\
 									 "lastReviewedTime  INTEGER);\n",
-									 sizeof(word->language), sizeof(word->localWord),
-									 sizeof(word->foreignWord));
+									 sizeof(word->language)-1, sizeof(word->localWord)-1,
+									 sizeof(word->foreignWord)-1);
 						          //We use sizeof() here so that if the size of the
 								    //struct in the header file changes, this changes
 								    //automatically to match. Of course, only on new
@@ -255,3 +328,62 @@ static BOOL incrementLastReviewTime() {
 	return runResultlessQuery(query, sizeof(query));
 }
 
+
+/** Runs a query, and then fills 'word' with the first result.  
+ *  Expects columns to be selected in the order they are in the database.
+ *  That is, (id, language, localWord, foreignWord, competencyLevel, type).
+ *  On error, returns FAIL*/
+static BOOL fillWordFromQuery(char *query, WordForReview *word) {
+	sqlite3_stmt *ppStmt;
+	int rv;
+
+	printf("running query %s\n", query);
+	if(sqlite3_prepare_v2(db, query, strlen(query), &ppStmt, NULL)!=SQLITE_OK)
+		return handleError("Error while filling word 1", ppStmt);
+	if((rv=sqlite3_step(ppStmt)) != SQLITE_ROW) {
+		printf("got rv %d\n", rv);
+		return handleError("Couldn't find row while stepping db", ppStmt);
+	}
+
+	word->id=sqlite3_column_int(ppStmt, 0);
+	strcpy(word->language, (char*)sqlite3_column_text(ppStmt, 1));
+	strcpy(word->localWord, (char*)sqlite3_column_text(ppStmt, 2));
+	strcpy(word->foreignWord, (char*)sqlite3_column_text(ppStmt, 3));
+	word->competencyLevel = sqlite3_column_int(ppStmt, 4);
+	word->type = sqlite3_column_int(ppStmt, 5);
+
+	if(sqlite3_finalize(ppStmt) != SQLITE_OK)
+		return handleError("Error while finalizing fillWord query", NULL);
+
+	return SUCCESS;
+}
+
+/**Postpends a query to omit duplicates. For example, if 'word'
+ * contains a word with id 5, a word with id 7, and a word with id 8,
+ * this function will append ' WHERE id!=5 AND id!=7 AND id!=8 ' to
+ * the end of query. If there is not enough space, will return FAIL,
+ * though query may still be altered at that point. Index is the number
+ * of elements in word to be postpended */
+static BOOL postpendOmitDuplicates(char *query, int querySize, 
+                                   WordForReview*word, int index) {
+	int i;
+	char s[1000];
+	BOOL shouldAddWhere = YES;
+
+	//don't add WHERE if it's already there
+	if(strcasestr(query, "where")) {
+		shouldAddWhere = NO;
+	}
+
+	for(i=0;i<index;i++) {
+		if(i==0 && shouldAddWhere) {
+			snprintf(s, sizeof(s), " WHERE id!=%d ", word[i].id);
+		}
+		else {
+			snprintf(s, sizeof(s), " AND id!=%d ", word[i].id);
+		}
+		if(!strncatSafe(query, s, querySize)) return FAIL;
+	}
+
+	return SUCCESS;
+}

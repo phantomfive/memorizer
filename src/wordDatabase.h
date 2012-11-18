@@ -14,26 +14,27 @@
 /** Should fill the array at 'index' randomly with a given word from the word 
   * group. expects every space in the array before 'index' to be filled in, and
   * will not duplicate these words. Returns SUCCESS or FAIL */
-BOOL databaseFillWordFromGroup(WordForReview **word, int index, 
+BOOL databaseFillWordFromGroup(WordForReview *word, int index, 
                                WordGroupType type);
 
 /** Should fill the array at 'index' with a given word from the word group. 
   * Expects every space in the array before 'index' to be filled in, and will 
   * not duplicate these words. Orders by the least recently reviewed. 
   * Returns SUCCESS or FAIL*/
-BOOL databaseFillWordFromGroupOrderByLeastRecent(WordForReview**word, int index,
+BOOL databaseFillWordFromGroupOrderByLeastRecent(WordForReview*word, int index,
                                                  WordGroupType type);
 
 /** Should fill the array at 'index' with a given word from the word group. 
   * Expects every space in the array before 'index' to be filled in, and will 
   * not duplicate these words. Returns SUCCESS or FAIL*/
-BOOL databaseFillWordFromGroupOrderByLeastSkilled(WordForReview **word, 
+BOOL databaseFillWordFromGroupOrderByLeastSkilled(WordForReview *word, 
                                                   int index,
                                                   WordGroupType type);
 
 
-/**Returns the number of words in a given group in the database*/
-int databaseGetCountForWordGroup(WordGroupType type);
+/**Sets 'count' to the number of words in the database of group 'type'.
+  *Returns TRUE on success, FAIL of fail*/
+BOOL databaseGetCountForWordGroup(WordGroupType type, int *count);
 
 /** Updates the word according to its ID anything that's changed in the struct
   * will be changed in the database.*/

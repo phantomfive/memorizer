@@ -34,5 +34,7 @@ clean:
 
 # DO NOT DELETE
 
+outsrc/common.o: src/common.h
+outsrc/main.o: src/wordSelector.h src/common.h
 outsrc/wordDatabase.o: src/wordDatabase.h src/common.h src/wordSelector.h
 outsrc/wordSelector.o: src/wordDatabase.h src/common.h src/wordSelector.h
