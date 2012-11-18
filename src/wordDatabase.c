@@ -2,6 +2,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <sqlite3.h>
 #include "wordDatabase.h"
 
@@ -14,6 +15,8 @@ static BOOL createSchema();
 static BOOL handleError(const char*message, sqlite3_stmt *pStmt);
 static BOOL runResultlessQuery(const char *query, int querySize);
 static BOOL getSingleIntegerFromQuery(const char *query, int size, int *result);
+static BOOL getLastReviewTime(int *lastReviewTime);
+static BOOL incrementLastReviewTime();
 
 #define CORRECT_VERSION   1
 #define INCORRECT_VERSION 2
@@ -60,17 +63,34 @@ BOOL databaseUpdateWord(const WordForReview *word) {
 
 BOOL databaseAddWord(const WordForReview *word) {
 	char query[1000];
+	int lastReviewedTime=-1;
 	if(!init()) return FAIL;
 
-	snprintf(query,sizeof(query), 
-	         "INSERT INTO words\n"\
-	         "(language, localWord, foreignWord, competencyLevel, type)\n"\
-				"VALUES\n"\
-				"(%s, %s, %s, %d, %d)\n",
-				word->language, word->localWord, word->foreignWord,
-				word->competencyLevel, word->type);
 	
-	return runResultlessQuery(query, sizeof(query));
+	if(!getLastReviewTime(&lastReviewedTime)) {
+		fprintf(stderr, "Couldn't get last reviewed time!\n");
+		return FAIL;
+	}
+
+	snprintf(query,sizeof(query), 
+	     "INSERT INTO words\n"\
+	     "(language, localWord, foreignWord, competencyLevel, "\
+		  "type,lastReviewedTime)\n"\
+		  "VALUES\n"\
+		  "('%s', '%s', '%s', %d, %d, %d)\n",
+		  word->language, word->localWord, word->foreignWord,
+		  word->competencyLevel, word->type, lastReviewedTime);
+	
+	if(!runResultlessQuery(query, sizeof(query))) {
+		printf("Couldn't add word!\n");
+		return FAIL;
+	}
+	
+	if(!incrementLastReviewTime()) {
+		fprintf(stderr, "Added word, but couldn't update review time!\n");
+		return SUCCESS;
+	}
+	return SUCCESS;
 }
 
 //---------------------------------------------------------------------------------
@@ -94,18 +114,25 @@ static BOOL init() {
 	
 	//check the database version
 	int versionResult = checkVersion();
-	if(versionResult==CORRECT_VERSION) return SUCCESS;
+	if(versionResult==CORRECT_VERSION){ 
+		initialized = YES;
+		return SUCCESS;
+	}
 	if(versionResult==INCORRECT_VERSION) {
+		fprintf(stderr,"This database version is incorrect!!\n");
 		sqlite3_close(db);
 		return FAIL;
 	}
 
 	//otherwise it's probably a blank database, and we should create the schema
+	fprintf(stderr, "New database detected, trying to create schema\n");
 	if(createSchema()==FAIL) {
+		fprintf(stderr, "Couldn't create schema for the database!!\n");
 		sqlite3_close(db);
 		return FAIL;
 	}
 
+	fprintf(stderr,"Database schema was created successfully. Ready to go!\n");
 	initialized = YES;
 	return SUCCESS;
 }
@@ -144,8 +171,10 @@ static BOOL createSchema() {
 
 	//Insert the version and the starting 'lastReviewed', which will be
 	//incremented every time a word is reviewed, and this will start at zero
-	snprintf(query, sizeof(query), "INSERT INTO GLOBAL (0,%d)",DATABASE_VERSION);
+	snprintf(query, sizeof(query), "INSERT INTO GLOBAL VALUES "\
+	                               " (0,%d)",DATABASE_VERSION);
 	return runResultlessQuery(query, sizeof(query));
+
 }
 
 /** Runs a query that doesn't return anything, or ignores the results.
@@ -212,5 +241,17 @@ static BOOL getSingleIntegerFromQuery(const char*query, int size, int*result) {
 		return handleError("Error while finalizing int query", NULL);
 	
 	return SUCCESS;
+}
+
+/**Returns a constant representing the last review time*/
+static BOOL getLastReviewTime(int *lastReviewTime) {
+	char query[] = "SELECT lastReviewed FROM GLOBAL";
+	return getSingleIntegerFromQuery(query, strlen(query), lastReviewTime);
+}
+
+/**Increments lastReviewTime in the database*/
+static BOOL incrementLastReviewTime() {
+	char query[] = "UPDATE GLOBAL SET lastReviewed = lastReviewed+1";
+	return runResultlessQuery(query, sizeof(query));
 }
 

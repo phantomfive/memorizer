@@ -4,5 +4,8 @@ all:
 clean: 
 	make -C .. clean
 
-.PHONY: all clean
+run:
+	make -C .. run
+
+.PHONY: all clean run
 

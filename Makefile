@@ -22,11 +22,14 @@ depend: $(CSRC)
 	makedepend -Y -p$(OBJDIR) $(INC) $(CSRC) 2> /dev/null
 	rm Makefile.bak
 
+run:
+	./memorizer
+
 clean:
 	rm -rf $(OBJDIR) $(TOCLEAN)
 	rm -f memorizer
 
-.PHONY: objs depend clean
+.PHONY: objs depend clean memorizer
 
 
 # DO NOT DELETE
