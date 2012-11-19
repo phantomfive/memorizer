@@ -29,7 +29,7 @@ clean:
 	rm -rf $(OBJDIR) $(TOCLEAN)
 	rm -f memorizer
 
-.PHONY: objs depend clean memorizer
+.PHONY: objs depend clean run
 
 
 # DO NOT DELETE
