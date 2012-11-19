@@ -8,6 +8,7 @@
 
 #include "common.h"
 
+/**Please see the README for a description of these groups*/
 typedef enum WordGroupTypeEnum {
 	WordGroupA=1,
 	WordGroupB=2,
@@ -19,10 +20,21 @@ typedef enum WordGroupTypeEnum {
 typedef struct WordForReviewStruct {
 	int id;
 	
+	/**The language for the word. Right now we only use Russian. Can be used
+	 * to distinguish various datasets.*/
 	char language[50];
+
+	/**The word in 'English'*/
 	char localWord[100];
+
+	/**The word in 'Russian'*/
 	char foreignWord[100];
+
+	/**Indicates what review group we are in*/
    WordGroupType type;
+
+	/**Indicates the competency level within the review group.
+	  *See markWordAsReviewed() for details*/
 	int competencyLevel;
 } WordForReview;
 

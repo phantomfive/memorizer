@@ -10,14 +10,14 @@
 #include "wordSelector.h"
 
 #define WORDS_AT_A_TIME 5
-#define TIMES_THROUGH_BEFORE_NEW_WORDS 3
+#define TIMES_THROUGH_BEFORE_NEW_WORDS 2
 
 /**Choose a compliment for the user*/
 static const char *compliment() {
 	char *list[]  = {"Good Job!", "You are great!", "You're a genius!",
 	                 "Do it again!", "You're awesome!", "Keep up the good work!",
-						  "You'll learn this in no time!", "Memorizing master!",
-						  "You're a star!"};
+	                 "You'll learn this in no time!", "Memorizing master!",
+	                 "You're a star!"};
 	int listLen = sizeof(list)/sizeof(list[0]);
 	int select = rand()% listLen;
 	return list[select];
