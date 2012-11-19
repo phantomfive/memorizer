@@ -9,7 +9,7 @@ To use:
 
 If you don't have a database, one will be created.
 Relies on SQLite.
-Only tested on OSX.
+Only tested on OSX, if you find errors on other platforms, please let me know.
 
 Note: THIS CODE IS COPYRIGHT 2012 BY ANDREW THOMPSON
       andrewthompson10@gmail.com
