@@ -1,3 +1,6 @@
+//copyright andrewthompson10@gmail.com 2012.
+//Usable under the terms of the GPL 3 or later only.
+
 #include <string.h>
 
 #include "common.h"

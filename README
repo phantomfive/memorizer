@@ -1,0 +1,18 @@
+A program to help review and memorize Russian (or any language) words.
+I will be updating it from time to time with Russian vocabulary words.
+
+To use:
+
+1) Download the source.
+2) type: make
+3) type: make run
+
+If you don't have a database, one will be created.
+Relies on SQLite.
+Only tested on OSX.
+
+Note: THIS CODE IS COPYRIGHT 2012 BY ANDREW THOMPSON
+      andrewthompson10@gmail.com
+		ALL RIGHTS RESERVED.
+		MAY BE USED UNDER THE TERMS OF THE GPL 3 OR HIGHER ONLY.
+

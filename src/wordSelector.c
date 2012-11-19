@@ -1,3 +1,7 @@
+/** COPYRIGHT 2012 andrewthompson10@gmail.com
+ *  All rights reserved.
+ *  May be used under the terms of the GPL 3 or higher. */
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>

@@ -1,3 +1,8 @@
+/***************************************************************************
+ * Author andrewthompson10@gmail.com. Copyright 2012. All Rights Reserved. *
+ * Usable under the terms of the GPL 3 or later.                           *
+ ***************************************************************************/
+
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>

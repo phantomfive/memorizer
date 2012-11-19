@@ -1,4 +1,4 @@
-/** Copyright 2012 by Andrew. Usable under the terms of the GPL 
+/** Copyright 2012 by Andrew. Usable under the terms of the GPL 3
 	 Interfacing with the database turned out to be the most difficult
 	 part but it was still easier than writing a custom solution.*/
 
