@@ -163,8 +163,7 @@ static WordGroupType chooseNextWordGroup(int quantity, int index) {
 			return WordGroupA;
 
 	//choose a word randomly from group B or C
-	if(rand()%2==0) {
-		if(groupBcount>index)
+	if(rand()%2==0 && groupBcount>index) {
 			return WordGroupB;
 	}else {
 		if(groupCcount>index)
