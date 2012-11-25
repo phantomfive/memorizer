@@ -131,23 +131,26 @@ BOOL markWordAsReviewed(WordForReview *word, BOOL result) {
 static int wordsReturned = 0;
 #define CYCLE_POINT 8
 #define NEW_WORDS_TO_REVIEW_AT_A_TIME 10
+#define GROUP_MIN 10
 static WordGroupType chooseNextWordGroup(int quantity, int index) {
 	int groupBcount;
 	int groupCcount;
 	int groupAcount;
 	int groupDcount;
+	int groupEcount;
 	if(!databaseGetCountForWordGroup(WordGroupB, &groupBcount) ||
 	   !databaseGetCountForWordGroup(WordGroupC, &groupCcount) ||
 		!databaseGetCountForWordGroup(WordGroupA, &groupAcount) ||
-		!databaseGetCountForWordGroup(WordGroupD, &groupDcount) ) {
+		!databaseGetCountForWordGroup(WordGroupD, &groupDcount) ||
+		!databaseGetCountForWordGroup(WordGroupE, &groupEcount) ) {
 		return WordGroupE;
 	}
 
 	//return at least one word from groupE and one from groupD every cycle
 	int cycle = wordsReturned % CYCLE_POINT;
 	wordsReturned++;
-	if(cycle == 0) return WordGroupE;
-	if(cycle == 1 && groupDcount>index) return WordGroupD;
+	if(cycle==0 && groupEcount>=GROUP_MIN)return WordGroupE;
+	if(cycle==1 && groupDcount>index && groupDcount>=GROUP_MIN)return WordGroupD;
 	
 	//If we have learned all the words in our review set, then
 	//get some more from group A and start learning them!
