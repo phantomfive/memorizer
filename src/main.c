@@ -9,8 +9,12 @@
 #include <string.h>
 #include "wordSelector.h"
 
-#define WORDS_AT_A_TIME 5
+#define WORDS_AT_A_TIME 3
 #define TIMES_THROUGH_BEFORE_NEW_WORDS 2
+
+#define GREEN_ON_BLACK "\033[0;32m"
+#define YELLOW_ON_BLACK "\033[0;33m"
+#define NORMAL_COLOR "\033[0m"
 
 /**Choose a compliment for the user*/
 static const char *compliment() {
@@ -52,11 +56,12 @@ static void reviewBasicWord(WordForReview *word) {
 		exit(-1);
 
 	if(!strcmp(input, word->localWord)) {
-		printf("   YES! %s\n", compliment());
+		printf("   "YELLOW_ON_BLACK"YES!"NORMAL_COLOR" %s\n", compliment());
 		markWordAsReviewed(word, SUCCESS);
 	}
 	else {
-		printf("   %s is the word for %s\n", word->localWord, word->foreignWord);
+		printf("   " GREEN_ON_BLACK "%s" NORMAL_COLOR \
+		       " is the word for %s\n", word->localWord, word->foreignWord);
 		markWordAsReviewed(word, FAIL);
 		printf("   [Press Enter]\n");
 		if(!readTypedInput(input, sizeof(input)))
@@ -76,11 +81,12 @@ static void reviewAdvancedWord(WordForReview *word) {
 		exit(-1);
 	
 	if(!strcmp(input, word->foreignWord)) {
-		printf("   YES! %s\n", compliment());
+		printf("   "YELLOW_ON_BLACK"YES!"NORMAL_COLOR " %s\n", compliment());
 		markWordAsReviewed(word, SUCCESS);
 	}
 	else {
-		printf("   %s is the word for %s\n", word->foreignWord, word->localWord);
+		printf("   " GREEN_ON_BLACK "%s" NORMAL_COLOR
+		       " is the word for %s\n", word->foreignWord, word->localWord);
 		markWordAsReviewed(word, FAIL);
 		printf("   [Press Enter]\n");
 		if(!readTypedInput(input, sizeof(input)))
