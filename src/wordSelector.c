@@ -24,10 +24,12 @@ static void moveWordDownAGroup(WordForReview *word);
 //-----------------------------------------------------------------------------
 BOOL selectWordsForReview(WordForReview *words, int quantity) {
 	int i=0;
-	BOOL rv = FAIL;
+	BOOL rv = SUCCESS;
 
 	for(i=0;i<quantity;i++) {
 		WordGroupType type = chooseNextWordGroup(quantity, i);
+
+		printf("Got selected type %d\n", type);
 	
 		if(type==WordGroupE)             rv=getWordForGroupE(words, i);
 		if(type==WordGroupD || rv==FAIL) rv=getWordForGroupD(words, i);
@@ -149,6 +151,8 @@ static WordGroupType chooseNextWordGroup(int quantity, int index) {
 	//return at least one word from groupE and one from groupD every cycle
 	int cycle = wordsReturned % CYCLE_POINT;
 	wordsReturned++;
+	printf("Cycle %d, groupE %d, groupD %d\n", cycle, groupEcount,
+	       groupDcount);
 	if(cycle==0 && groupEcount>=GROUP_MIN)return WordGroupE;
 	if(cycle==1 && groupDcount>index && groupDcount>=GROUP_MIN)return WordGroupD;
 	
