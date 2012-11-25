@@ -153,8 +153,8 @@ static WordGroupType chooseNextWordGroup(int quantity, int index) {
 	wordsReturned++;
 	printf("Cycle %d, groupE %d, groupD %d\n", cycle, groupEcount,
 	       groupDcount);
-	if(cycle==0 && groupEcount>=GROUP_MIN)return WordGroupE;
 	if(cycle==1 && groupDcount>index && groupDcount>=GROUP_MIN)return WordGroupD;
+	if(cycle==0 &&                      groupEcount>=GROUP_MIN)return WordGroupE;
 	
 	//If we have learned all the words in our review set, then
 	//get some more from group A and start learning them!
