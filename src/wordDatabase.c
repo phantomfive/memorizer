@@ -41,7 +41,6 @@ BOOL databaseFillWordFromGroup(WordForReview *word, int index,
 	                               type);
 
 	postpendOmitDuplicates(query, sizeof(query), word, index);
-	word[0].id = 1;
 	printf("chose index %d\n", index);
 	if(!fillWordFromQuery(query, &word[index])) {
 		fprintf(stderr, "Couldn't fill word from group\n");
