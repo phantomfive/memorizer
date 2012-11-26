@@ -148,19 +148,23 @@ static WordGroupType chooseNextWordGroup(int quantity, int index) {
 		return WordGroupE;
 	}
 
-	//return at least one word from groupE and one from groupD every cycle
+	//cycle is an internal measurements that means 'every X words'
+	//If we have learned all the words in our review set, then
+	//get some more from group A and start learning them!
+	if(groupBcount+groupCcount+index < NEW_WORDS_TO_REVIEW_AT_A_TIME 
+	   && groupAcount>index)
+		 return WordGroupA;
+
+	//Some things we want to make sure to do every X words.
 	int cycle = wordsReturned % CYCLE_POINT;
 	wordsReturned++;
 	printf("Cycle %d, groupE %d, groupD %d\n", cycle, groupEcount,
 	       groupDcount);
+
+	//return at least one word from groupE and one from groupD every cycle
 	if(cycle==1 && groupDcount>index && groupDcount>=GROUP_MIN)return WordGroupD;
 	if(cycle==0 &&                      groupEcount>=GROUP_MIN)return WordGroupE;
 	
-	//If we have learned all the words in our review set, then
-	//get some more from group A and start learning them!
-	if(groupBcount+groupCcount < NEW_WORDS_TO_REVIEW_AT_A_TIME 
-	   && groupAcount>index)
-			return WordGroupA;
 
 	//choose a word randomly from group B or C
 	if(rand()%2==0 && groupBcount>index) {
