@@ -126,6 +126,17 @@ BOOL markWordAsReviewed(WordForReview *word, BOOL result) {
 	return databaseUpdateWord(word);
 }
 
+int getNumberOfWordsMemorized() {
+	//we will consider it learned if it is in group D or group E
+	int groupEcount=0;
+	int groupDcount=0;
+	if(!databaseGetCountForWordGroup(WordGroupE, &groupEcount) ||
+	   !databaseGetCountForWordGroup(WordGroupD, &groupDcount) ) {
+			return -1;
+	}
+
+	return groupEcount + groupDcount;
+}
 
 //--------------------------------------------------------------------------
 // Private methods
@@ -167,7 +178,9 @@ static WordGroupType chooseNextWordGroup(int quantity, int index) {
 	
 
 	//choose a word randomly from group B or C
-	if(rand()%2==0 && groupBcount>index) {
+	//If we've already chosen 'index' words from this group, then choose a
+	//different group. That's what the 'groupdCount>index' condition is about
+	if((rand()%2==0 || groupCcount<=index) && groupBcount>index) {
 			return WordGroupB;
 	}else {
 		if(groupCcount>index)

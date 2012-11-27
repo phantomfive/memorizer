@@ -27,6 +27,19 @@ static const char *compliment() {
 	return list[select];
 }
 
+static void printWelcome() {
+	int wordsLearned;
+	printf("Welcome!\n");
+	
+	//Only show them how many words they've learned if it's high enough,
+	//so they don't get demoralized too easily.
+	wordsLearned = getNumberOfWordsMemorized();
+	if(wordsLearned>21) {
+		printf("You have learned %d words so far.\n", wordsLearned);
+	}
+	printf("\n");
+}
+
 /**Read input from the user. This needs to be cleaned up, but
   *that will be done during the UI design phase*/
 static BOOL readTypedInput(char *buf, int bufLen) {
@@ -151,6 +164,8 @@ int main() {
 	int choice; 
 
 	srand(time(NULL));
+
+	printWelcome();
 
 	while(1) {
 		printf("Menu.\n");

@@ -52,5 +52,10 @@ BOOL markWordAsReviewed(WordForReview *word, BOOL result);
 /** Adds a word to the database */
 BOOL addNewWordForReview(const char *localWord,  const char *foreignWord, 
                          const char *language);
+
+/**Returns the number of words learned so far. If there is an error,
+ * returns -1. */
+int getNumberOfWordsMemorized();
+
 #endif
 
