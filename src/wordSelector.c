@@ -173,9 +173,8 @@ static WordGroupType chooseNextWordGroup(int quantity, int index) {
 	       groupDcount);
 
 	//return at least one word from groupE and one from groupD every cycle
-	if(cycle==1 && groupDcount>index && groupDcount>=GROUP_MIN)return WordGroupD;
 	if(cycle==0 &&                      groupEcount>=GROUP_MIN)return WordGroupE;
-	
+	if(cycle<=1 && groupDcount>index && groupDcount>=GROUP_MIN)return WordGroupD;
 
 	//choose a word randomly from group B or C
 	//If we've already chosen 'index' words from this group, then choose a
