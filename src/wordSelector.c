@@ -10,6 +10,9 @@
 
 #include "wordSelector.h"
 
+static WordForReview *tmp; //only used to get the size in the following line
+static char language[sizeof(tmp->language)] = "data";
+
 //private methods
 static WordGroupType chooseNextWordGroup(int quantity, int index);
 static BOOL getWordForGroupA(WordForReview *word, int index);
@@ -22,6 +25,19 @@ static void moveWordDownAGroup(WordForReview *word);
 //-----------------------------------------------------------------------------
 //Public methods
 //-----------------------------------------------------------------------------
+BOOL selectWordLanguage(const char *name) {
+	char databaseName[1500];
+	
+	//set the name of the database we will be using
+	snprintf(databaseName, sizeof(databaseName), "data/%s.db", name);
+	if(setWordDatabaseName(databaseName)==FAIL) return FAIL;
+
+	//store the name of the language
+	strncpy(language, name, sizeof(language)-1);
+	language[sizeof(language)-1] = 0;
+	return SUCCESS;
+}
+
 BOOL selectWordsForReview(WordForReview *words, int quantity) {
 	int i=0;
 	BOOL rv = SUCCESS;

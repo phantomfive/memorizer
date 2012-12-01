@@ -38,6 +38,9 @@ typedef struct WordForReviewStruct {
 	int competencyLevel;
 } WordForReview;
 
+/**Set this to choose the database to use for this session. Defaults to
+ * 'data'. */
+BOOL selectWordLanguage(const char *name);
 
 /** Gets the next 'quantity' words from the database for review.
   * 'words' should be an array of WordForReview at least 'quantity' long.
