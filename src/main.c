@@ -9,6 +9,8 @@
 #include <string.h>
 #include "wordSelector.h"
 
+#include "main.h"
+
 #define WORDS_AT_A_TIME 3
 #define TIMES_THROUGH_BEFORE_NEW_WORDS 2
 
@@ -29,7 +31,7 @@ static const char *compliment() {
 
 static void printWelcome() {
 	int wordsLearned;
-	printf("Welcome!\n");
+	printf("Welcome to %s!\n", language);
 	
 	//Only show them how many words they've learned if it's high enough,
 	//so they don't get demoralized too easily.
@@ -57,13 +59,13 @@ static BOOL readTypedInput(char *buf, int bufLen) {
 	return SUCCESS;
 }
 
-/**Reviews a basic word  by showing it in Russian, then letting
+/**Reviews a basic word  by showing it in the foreign language, then letting
  * you guess the English.*/
 static void reviewBasicWord(WordForReview *word) {
 	char input[1000];
 	printf("----\n");
-	printf("The Russian word is %s.\n   Can you guess the English word? --> ",
-	       word->foreignWord);
+	printf("The %s word is %s.\n   Can you guess the English word? --> ",
+	       language, word->foreignWord);
 
 	if(!readTypedInput(input, sizeof(input)))
 		exit(-1);
@@ -83,12 +85,12 @@ static void reviewBasicWord(WordForReview *word) {
 }
 
 /**Reviews an advanced word by showing it in English, then letting you
- * guess the Russian.*/
+ * guess the foreign language.*/
 static void reviewAdvancedWord(WordForReview *word) {
 	char input[1000];
 	printf("----\n");
-	printf("The English word is %s.\n Can you guess the Russian word? --> ",
-	       word->localWord);
+	printf("The English word is %s.\n Can you guess the %s word? --> ",
+	       language, word->localWord);
 
 	if(!readTypedInput(input, sizeof(input)))
 		exit(-1);
@@ -146,11 +148,11 @@ BOOL addWord() {
 	printf("Enter English word: ");
 	fgets(eng, sizeof(eng), stdin);
 	eng[strlen(eng)-1] = 0;
-	printf("Enter Russian word: ");
+	printf("Enter %s word: ", language);
 	fgets(rus, sizeof(rus), stdin);
 	rus[strlen(rus)-1] = 0;
 
-	if(addNewWordForReview(eng, rus, "Russian")==SUCCESS) {
+	if(addNewWordForReview(eng, rus, language)==SUCCESS) {
 		printf("Word added\n");
 	}else {
 		printf("Error while adding word\n");
@@ -164,6 +166,8 @@ int main() {
 	int choice; 
 
 	srand(time(NULL));
+
+	selectWordLanguage(language);
 
 	printWelcome();
 
