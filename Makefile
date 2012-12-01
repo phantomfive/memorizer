@@ -1,40 +1,25 @@
+# Basic Makefile.
+# Earlier my Makefile checked all the dependencies and only compiled the ones
+# that had changed. Then I found it's faster if you just compile it all
+# in a single invocation. Better yet, it's a shorter Makefile. ~AT
+
 CC=gcc
 CCFLAGS=-Wall -Werror -std=c99 -ggdb
 LDFLAGS= -lsqlite3
 
-OBJDIR=out
-
 CSRC := $(wildcard src/*.c)
-OBJS := $(patsubst src/%.c, $(OBJDIR)/%.o, $(CSRC))
+HDRS := $(wildcard src/*.h)
 
-memorizer: $(CSRC)
-	make objs
-	$(CC) -o memorizer $(LDFLAGS) $(OBJS)
+all: japanese russian
 
+japanese: $(CSRC) $(HDRS)
+	$(CC) -o japanese -D JAPANESE $(CCFLAGS) $(LDFLAGS) $(CSRC)
 
-objs: $(OBJDIR) $(OBJS)
-$(OBJDIR)/%.o: src/%.c
-	$(CC) $(CCFLAGS) $(INC) -c $< -o $@
-$(OBJDIR):
-	mkdir -p $(OBJDIR)
-
-depend: $(CSRC)
-	makedepend -Y -p$(OBJDIR) $(INC) $(CSRC) 2> /dev/null
-	rm Makefile.bak
-
-run:
-	./memorizer
+russian: $(CSRC) $(HDRS)
+	$(CC) -o russian -D RUSSIAN $(CCFLAGS) $(LDFLAGS) $(CSRC)
 
 clean:
-	rm -rf $(OBJDIR) $(TOCLEAN)
-	rm -f memorizer
+	rm -rf japanese russian russian.dSYM japanese.dSYM
 
-.PHONY: objs depend clean run
+.PHONY: clean all
 
-
-# DO NOT DELETE
-
-outsrc/common.o: src/common.h
-outsrc/main.o: src/wordSelector.h src/common.h
-outsrc/wordDatabase.o: src/wordDatabase.h src/common.h src/wordSelector.h
-outsrc/wordSelector.o: src/wordDatabase.h src/common.h src/wordSelector.h
