@@ -10,6 +10,7 @@
 
 //our database handle
 static sqlite3 *db=NULL;
+static char dbName[1500] = "data.db"; //default database name
 
 //forward declarations
 static BOOL init();
@@ -20,6 +21,7 @@ static BOOL getSingleIntegerFromQuery(const char *query, int size, int *result);
 static BOOL getLastReviewTime(int *lastReviewTime);
 static BOOL incrementLastReviewTime();
 static BOOL fillWordFromQuery(char *query, WordForReview *word);
+static BOOL closeDatabase();
 static BOOL postpendOmitDuplicates(char *query, int querySize, 
                                    WordForReview*word, int index);
 
@@ -32,6 +34,14 @@ static int checkVersion();
 //----------------------------------------------------------------------------
 // public API
 //----------------------------------------------------------------------------
+BOOL setWordDatabaseName(const char *name) {
+	strncpy(dbName,name,sizeof(dbName)-1);
+	dbName[sizeof(dbName)-1] = 0;
+
+	closeDatabase();
+	return init();
+}
+
 BOOL databaseFillWordFromGroup(WordForReview *word, int index, 
                                WordGroupType type) {
 	char query[10000];
@@ -178,7 +188,7 @@ static BOOL init() {
    if(initialized) return SUCCESS;
 
 	//open the database
-	result = sqlite3_open(DATABASE_NAME, &db);
+	result = sqlite3_open(dbName, &db);
 	if(result!=SQLITE_OK) {
 		printf("Couldn't open database: %s\n", sqlite3_errmsg(db));
 		return FAIL;
@@ -206,6 +216,16 @@ static BOOL init() {
 
 	fprintf(stderr,"Database schema was created successfully. Ready to go!\n");
 	initialized = YES;
+	return SUCCESS;
+}
+
+static BOOL closeDatabase() {
+	if(initialized == NO) return SUCCESS;
+
+	if(sqlite3_close(db)!=SQLITE_OK)
+		handleError("Couldn't close database", NULL);
+	
+	initialized = NO;
 	return SUCCESS;
 }
 

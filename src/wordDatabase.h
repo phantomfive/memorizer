@@ -8,8 +8,10 @@
 #include "common.h"
 #include "wordSelector.h"
 
-#define DATABASE_NAME "data.db"
 #define DATABASE_VERSION 1
+
+/** Should let the callerr choose a database name */
+BOOL setWordDatabaseName(const char *name);
 
 /** Should fill the array at 'index' randomly with a given word from the word 
   * group. expects every space in the array before 'index' to be filled in, and
