@@ -1,11 +1,12 @@
 A program to help review and memorize Russian, Japanese, or any language words.
-I will be updating it from time to time with Russian and Japanesevocabulary.
+I will be updating it from time to time with Russian and Japanese vocabulary.
 
 To use:
 
 1) Download the source.
 2) type: make
-3) type: make run
+3) type: ./japanese
+     or: ./russian
 
 If you don't have a database, one will be created.
 Relies on SQLite.
