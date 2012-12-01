@@ -90,7 +90,7 @@ static void reviewAdvancedWord(WordForReview *word) {
 	char input[1000];
 	printf("----\n");
 	printf("The English word is %s.\n Can you guess the %s word? --> ",
-	       language, word->localWord);
+	        word->localWord, language);
 
 	if(!readTypedInput(input, sizeof(input)))
 		exit(-1);
