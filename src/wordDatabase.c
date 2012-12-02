@@ -47,16 +47,9 @@ BOOL databaseFillWordFromGroup(WordForReview *word, int index,
 	char query[10000];
 	if(!init()) return FAIL;
 	
-	snprintf(query, sizeof(query), "SELECT * FROM WORDS where type=%d",
-	                               type);
-
+	snprintf(query, sizeof(query), "SELECT * FROM WORDS where type=%d", type);
 	postpendOmitDuplicates(query, sizeof(query), word, index);
-	printf("chose index %d\n", index);
-	if(!fillWordFromQuery(query, &word[index])) {
-		fprintf(stderr, "Couldn't fill word from group\n");
-		return FAIL;
-	}
-	return SUCCESS;
+	return fillWordFromQuery(query, &word[index]);
 }
 
 BOOL databaseFillWordFromGroupOrderByLeastRecent(WordForReview*word, int index,
@@ -67,14 +60,7 @@ BOOL databaseFillWordFromGroupOrderByLeastRecent(WordForReview*word, int index,
 	snprintf(query, sizeof(query), "SELECT * FROM WORDS where type=%d", type);
 	postpendOmitDuplicates(query, sizeof(query), word, index);
 	strncatSafe(query, " ORDER BY lastReviewedTime LIMIT 1", sizeof(query));
-	
-
-	if(!fillWordFromQuery(query, &word[index])) {
-		fprintf(stderr, "Couldn't fill word from group order by least recent\n");
-		return FAIL;
-	}
-
-	return SUCCESS;
+	return fillWordFromQuery(query, &word[index]);
 }
 
 
@@ -86,13 +72,7 @@ BOOL databaseFillWordFromGroupOrderByLeastSkilled(WordForReview*word,int index,
 	snprintf(query, sizeof(query),  "SELECT * FROM WORDS where type=%d", type);
 	postpendOmitDuplicates(query, sizeof(query), word, index);
 	strncatSafe(query, " ORDER BY competencyLevel LIMIT 1", sizeof(query));
-
-	if(!fillWordFromQuery(query, &word[index])){
-		fprintf(stderr, "Couldn't fill word ordered by least skilled\n");
-		return FAIL;
-	}
-
-	return SUCCESS;
+	return fillWordFromQuery(query, &word[index]);
 }
 
 
@@ -100,15 +80,9 @@ BOOL databaseGetCountForWordGroup(WordGroupType type, int *count) {
 	char query[1000];
 	if(!init()) return FAIL;
 
-	snprintf(query,sizeof(query),
-	               "SELECT COUNT (*) FROM WORDS WHERE type=%d", type);
-
-	if(!getSingleIntegerFromQuery(query, sizeof(query), count)) {
-		fprintf(stderr, "Failed getting count for word group\n");
-		return FAIL;
-	}
-
-	return SUCCESS;
+	snprintf(query,sizeof(query), 
+	         "SELECT COUNT (*) FROM WORDS WHERE type=%d", type);
+	return getSingleIntegerFromQuery(query, sizeof(query), count);
 }
 
 BOOL databaseUpdateWord(const WordForReview *word) {
