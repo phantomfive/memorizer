@@ -21,5 +21,8 @@ russian: $(CSRC) $(HDRS)
 clean:
 	rm -rf japanese russian russian.dSYM japanese.dSYM
 
+run:
+	@echo type ./japanese or ./russian
+
 .PHONY: clean all
 
