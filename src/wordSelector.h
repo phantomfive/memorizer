@@ -42,10 +42,8 @@ typedef struct WordForReviewStruct {
  * 'data'. */
 BOOL selectWordLanguage(const char *name);
 
-/** Gets the next 'quantity' words from the database for review.
-  * 'words' should be an array of WordForReview at least 'quantity' long.
-  * Returns SUCCESS on success or FAIL if there is an error. */
-BOOL selectWordsForReview(WordForReview *words, int quantity);
+/** Gets the next word for review. Returns NULL if there is an error*/
+WordForReview *getNextWordForReview();
 
 /** Call this after a word gets reviewed, to update the database as to the
     result. Send in the word, and SUCCESS if they got it, or FAIL otherwise.

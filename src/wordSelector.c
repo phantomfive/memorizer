@@ -20,10 +20,15 @@ static BOOL getWordForGroupB(WordForReview *word, int index);
 static BOOL getWordForGroupC(WordForReview *word, int index);
 static BOOL getWordForGroupD(WordForReview *word, int index);
 static BOOL getWordForGroupE(WordForReview *word, int index);
+static BOOL putWordsInArray(WordForReview *words, int quantity);
 static void moveWordUpAGroup(WordForReview *word);
 static void moveWordDownAGroup(WordForReview *word);
+static WordForReview *getNextWordFromList();
+static BOOL populateWordList();
+
 //-----------------------------------------------------------------------------
 //Public methods
+//The comments for these methods are in the header file, wordSelector.h
 //-----------------------------------------------------------------------------
 BOOL selectWordLanguage(const char *name) {
 	char databaseName[1500];
@@ -38,28 +43,21 @@ BOOL selectWordLanguage(const char *name) {
 	return SUCCESS;
 }
 
-BOOL selectWordsForReview(WordForReview *words, int quantity) {
-	int i=0;
-	BOOL rv = SUCCESS;
+WordForReview *getNextWordForReview() {
+	WordForReview *rv;
 
-	for(i=0;i<quantity;i++) {
-		WordGroupType type = chooseNextWordGroup(quantity, i);
+	//We want to select three words, review each word twice, then
+	//select three new words. So we keep those three words in the list.
+	//once the list is empty, we repopulate the list.
+	rv = getNextWordFromList();
+	if(rv!=NULL)
+	return rv;
 
-		printf("Got selected type %d\n", type);
+	//If we get here, the list is empty, so we better populate it again
+	populateWordList();
+	rv = getNextWordFromList();
 	
-		if(type==WordGroupE)             rv=getWordForGroupE(words, i);
-		if(type==WordGroupD || rv==FAIL) rv=getWordForGroupD(words, i);
-		if(type==WordGroupC || rv==FAIL) rv=getWordForGroupC(words, i);
-		if(type==WordGroupB || rv==FAIL) rv=getWordForGroupB(words, i);
-		if(type==WordGroupA || rv==FAIL) rv=getWordForGroupA(words, i);
-
-		if(rv==FAIL) {
-			printf("Failed to get word\n");
-			return FAIL;
-		}
-	}
-
-	return SUCCESS;
+	return rv;
 }
 
 BOOL addNewWordForReview(const char *localWord, const char *foreignWord,
@@ -156,11 +154,86 @@ int getNumberOfWordsMemorized() {
 
 //--------------------------------------------------------------------------
 // Private methods
+// These are for managing the word lists
 //--------------------------------------------------------------------------
-static int wordsReturned = 0;
+
+//The number of words in the list. We will put each word in the list twice.
+//When it runs out, we will return false.
+#define WORDS_IN_LIST 3
+static WordForReview wordList[WORDS_IN_LIST*2];
+static int wordsLeftInList=0;
+
+//Returns the next word in the list. If the wordlist is empty, returns NULL
+static WordForReview *getNextWordFromList() {
+	WordForReview *rv;
+	if(wordsLeftInList<=0) return NULL;
+
+	rv = &wordList[wordsLeftInList];
+	wordsLeftInList--;
+	return rv;
+}
+
+//Adds word to the list. Return SUCCESS or FAIL
+static BOOL populateWordList() {
+	int i;
+
+	//First we get some words from the database.
+	if(!putWordsInArray(wordList, WORDS_IN_LIST)) {
+		return FAIL;
+	}
+
+	//next, copy them over so we can do each word twice
+	for(i=0;i<WORDS_IN_LIST;i++) {
+		wordList[i+WORDS_IN_LIST] = wordList[i];
+	}
+
+	wordsLeftInList = WORDS_IN_LIST*2-1;
+
+	for(i=0;i<wordsLeftInList;i++) {
+		printf("Got word %s, %d\n", wordList[i].localWord, i);
+	}
+	printf("WORDS IN LIST %d\n", wordsLeftInList);
+	return SUCCESS;
+}
+
+//-----------------------------------------------------------------------------
+// More private methods
+// These manage the logic of which word will be chosen next from the database
+//-----------------------------------------------------------------------------
+
+/**Tries to fill 'words' with 'quantity' words from the database.
+ * returns FAIL or SUCCESS.*/
+static BOOL putWordsInArray(WordForReview *words, int quantity) {
+	int i=0;
+	BOOL rv = SUCCESS;
+
+	for(i=0;i<quantity;i++) {
+		WordGroupType type = chooseNextWordGroup(quantity, i);
+
+		printf("Got selected type %d\n", type);
+	
+		//if we can't get the preffered group, go one group up.
+		if(type==WordGroupE)             rv=getWordForGroupE(words, i);
+		if(type==WordGroupD || rv==FAIL) rv=getWordForGroupD(words, i);
+		if(type==WordGroupC || rv==FAIL) rv=getWordForGroupC(words, i);
+		if(type==WordGroupB || rv==FAIL) rv=getWordForGroupB(words, i);
+		if(type==WordGroupA || rv==FAIL) rv=getWordForGroupA(words, i);
+
+		if(rv==FAIL) {
+			printf("Failed to get word\n");
+			return FAIL;
+		}
+	}
+
+	return SUCCESS;
+}
+
+
+
 #define CYCLE_POINT 8
 #define NEW_WORDS_TO_REVIEW_AT_A_TIME 10
 #define GROUP_MIN 10
+static int wordsReturned = 0;
 static WordGroupType chooseNextWordGroup(int quantity, int index) {
 	int groupBcount;
 	int groupCcount;

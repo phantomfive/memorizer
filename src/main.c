@@ -11,9 +11,6 @@
 
 #include "main.h"
 
-#define WORDS_AT_A_TIME 3
-#define TIMES_THROUGH_BEFORE_NEW_WORDS 2
-
 #define GREEN_ON_BLACK "\033[0;32m"
 #define YELLOW_ON_BLACK "\033[0;33m"
 #define NORMAL_COLOR "\033[0m"
@@ -111,30 +108,24 @@ static void reviewAdvancedWord(WordForReview *word) {
 
 /**Keep reviewing words until they quit*/
 static BOOL reviewWords() {
-	int i,j;
-	WordForReview words[WORDS_AT_A_TIME]={};
 
 	printf("Reviewing words!!\n");
 
 	while(1) {
-		if(!selectWordsForReview(words, WORDS_AT_A_TIME)) {
+		WordForReview *word = getNextWordForReview();
+		if(word==NULL) {
 			printf("Cannot go on! Exiting.\n");
 			exit(-1);
 		}
-		
-		for(j=0;j<TIMES_THROUGH_BEFORE_NEW_WORDS;j++) {
-			for(i=0;i<WORDS_AT_A_TIME;i++) {
-				if(words[i].type==WordGroupA || words[i].type==WordGroupB) {
-					reviewBasicWord(&words[i]);
-				}
-				else {
-					reviewAdvancedWord(&words[i]);
-				}
-				printf("word group %d, skill %d, id %d\n",words[i].type,
-		                                         words[i].competencyLevel,
-															  words[i].id);
-			}
-		}
+
+		if(word->type==WordGroupA || word->type==WordGroupB)
+			reviewBasicWord(word);
+		else
+			reviewAdvancedWord(word);
+
+		printf("word group %d, skill %d, id %d\n",word->type,
+	                                             word->competencyLevel,
+		                                          word->id);
 	}
 }
 
