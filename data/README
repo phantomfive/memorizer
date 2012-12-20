@@ -1,0 +1,14 @@
+*************
+* DATABASES *
+*************
+
+These databases are in sqlite3 format.
+To read one, type:
+
+sqlite3 Russian.db
+
+From there, type:
+.h
+
+for a list of commands, or type a query.
+
