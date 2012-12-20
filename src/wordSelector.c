@@ -189,10 +189,6 @@ static BOOL populateWordList() {
 
 	wordsLeftInList = WORDS_IN_LIST*2-1;
 
-	for(i=0;i<wordsLeftInList;i++) {
-		printf("Got word %s, %d\n", wordList[i].localWord, i);
-	}
-	printf("WORDS IN LIST %d\n", wordsLeftInList);
 	return SUCCESS;
 }
 
