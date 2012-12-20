@@ -61,7 +61,8 @@ static BOOL readTypedInput(char *buf, int bufLen) {
 static void reviewBasicWord(WordForReview *word) {
 	char input[1000];
 	printf("----\n");
-	printf("The %s word is %s.\n   Can you guess the English word? --> ",
+	printf("The %s word is " YELLOW_ON_BLACK "%s" NORMAL_COLOR
+	       ".\n   Can you guess the English word? --> ",
 	       language, word->foreignWord);
 
 	if(!readTypedInput(input, sizeof(input)))
@@ -86,7 +87,8 @@ static void reviewBasicWord(WordForReview *word) {
 static void reviewAdvancedWord(WordForReview *word) {
 	char input[1000];
 	printf("----\n");
-	printf("The English word is %s.\n Can you guess the %s word? --> ",
+	printf("The English word is " YELLOW_ON_BLACK "%s" NORMAL_COLOR
+	       ".\n Can you guess the %s word? --> ",
 	        word->localWord, language);
 
 	if(!readTypedInput(input, sizeof(input)))
