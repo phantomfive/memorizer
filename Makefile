@@ -1,7 +1,7 @@
 # Basic Makefile.
 # Earlier my Makefile checked all the dependencies and only compiled the ones
 # that had changed. Then I found it's faster if you just compile it all
-# in a single invocation. Better yet, it's a shorter Makefile. ~AT
+# in a single invocation. Better yet, it's a shorter Makefile. -AT
 
 CC=gcc
 CCFLAGS=-Wall -Werror -std=c99 -ggdb
