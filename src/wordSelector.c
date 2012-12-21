@@ -168,8 +168,8 @@ static WordForReview *getNextWordFromList() {
 	WordForReview *rv;
 	if(wordsLeftInList<=0) return NULL;
 
-	rv = &wordList[wordsLeftInList];
 	wordsLeftInList--;
+	rv = &wordList[wordsLeftInList];
 	return rv;
 }
 
@@ -187,7 +187,7 @@ static BOOL populateWordList() {
 		wordList[i+WORDS_IN_LIST] = wordList[i];
 	}
 
-	wordsLeftInList = WORDS_IN_LIST*2-1;
+	wordsLeftInList = WORDS_IN_LIST*2;
 
 	return SUCCESS;
 }
