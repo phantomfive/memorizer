@@ -160,6 +160,7 @@ int getNumberOfWordsMemorized() {
 //The number of words in the list. We will put each word in the list twice.
 //When it runs out, we will return false.
 #define WORDS_IN_LIST 3
+#define TIMES_TO_REVIEW_LIST 2
 static WordForReview wordList[WORDS_IN_LIST*2];
 static int wordsLeftInList=0;
 
@@ -169,25 +170,20 @@ static WordForReview *getNextWordFromList() {
 	if(wordsLeftInList<=0) return NULL;
 
 	wordsLeftInList--;
-	rv = &wordList[wordsLeftInList];
+	rv = &wordList[wordsLeftInList % WORDS_IN_LIST];
 	return rv;
 }
 
 //Adds word to the list. Return SUCCESS or FAIL
 static BOOL populateWordList() {
-	int i;
-
 	//First we get some words from the database.
 	if(!putWordsInArray(wordList, WORDS_IN_LIST)) {
 		return FAIL;
 	}
 
-	//next, copy them over so we can do each word twice
-	for(i=0;i<WORDS_IN_LIST;i++) {
-		wordList[i+WORDS_IN_LIST] = wordList[i];
-	}
-
-	wordsLeftInList = WORDS_IN_LIST*2;
+	//calculate the words left, which will be higher since we
+	//review each word on the list twice before getting new words
+	wordsLeftInList = WORDS_IN_LIST*TIMES_TO_REVIEW_LIST;
 
 	return SUCCESS;
 }
