@@ -80,10 +80,10 @@ BOOL addNewWordForReview(const char *localWord, const char *foreignWord,
 
 
 //This function is too long.......
-#define COMPETENCY_B 5
+#define COMPETENCY_B  5
 #define COMPETENCY_C 10
-#define COMPETENCY_D 15
-#define COMPETENCY_E 10
+#define COMPETENCY_D  7
+#define COMPETENCY_E  3
 BOOL markWordAsReviewed(WordForReview *word, BOOL result) {
 	
 	//if it's wordGroupA, then we move it to B automatically, since they
