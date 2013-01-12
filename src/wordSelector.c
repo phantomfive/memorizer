@@ -222,10 +222,10 @@ static BOOL putWordsInArray(WordForReview *words, int quantity) {
 
 
 
-#define CYCLE_POINT 8
 #define NEW_WORDS_TO_REVIEW_AT_A_TIME 10
-#define GROUP_MIN 10
-static int wordsReturned = 0;
+#define GROUP_MIN 40
+#define GROUP_D_FREQUENCY 4
+#define GROUP_E_FREQUENCY 12
 static WordGroupType chooseNextWordGroup(int quantity, int index) {
 	int groupBcount;
 	int groupCcount;
@@ -247,15 +247,9 @@ static WordGroupType chooseNextWordGroup(int quantity, int index) {
 	   && groupAcount>index)
 		 return WordGroupA;
 
-	//Some things we want to make sure to do every X words.
-	int cycle = wordsReturned % CYCLE_POINT;
-	wordsReturned++;
-	printf("Cycle %d, groupE %d, groupD %d\n", cycle, groupEcount,
-	       groupDcount);
-
 	//return at least one word from groupE and one from groupD every cycle
-	if(cycle==0 &&                      groupEcount>=GROUP_MIN)return WordGroupE;
-	if(cycle<=1 && groupDcount>index && groupDcount>=GROUP_MIN)return WordGroupD;
+	if(groupEcount>=GROUP_MIN && 0==(rand()%GROUP_E_FREQUENCY))return WordGroupE;
+	if(groupDcount>=GROUP_MIN && 0==(rand()%GROUP_D_FREQUENCY))return WordGroupD;
 
 	//choose a word randomly from group B or C
 	//If we've already chosen 'index' words from this group, then choose a
