@@ -225,6 +225,9 @@ static BOOL putWordsInArray(WordForReview *words, int quantity) {
 #define NEW_WORDS_TO_REVIEW_AT_A_TIME 10
 #define GROUP_MIN 40
 #define GROUP_D_FREQUENCY 4
+#define GROUP_D_URGENT_FREQ 3 //if wordcount gets too high for group D,
+                              //we increase the frequency of showing it
+#define GROUP_D_URGENT_LEVEL 350
 #define GROUP_E_FREQUENCY 12
 static WordGroupType chooseNextWordGroup(int quantity, int index) {
 	int groupBcount;
@@ -240,16 +243,25 @@ static WordGroupType chooseNextWordGroup(int quantity, int index) {
 		return WordGroupE;
 	}
 
-	//cycle is an internal measurements that means 'every X words'
 	//If we have learned all the words in our review set, then
 	//get some more from group A and start learning them!
 	if(groupBcount+groupCcount+index < NEW_WORDS_TO_REVIEW_AT_A_TIME 
 	   && groupAcount>index)
 		 return WordGroupA;
 
-	//return at least one word from groupE and one from groupD every cycle
-	if(groupEcount>=GROUP_MIN && 0==(rand()%GROUP_E_FREQUENCY))return WordGroupE;
-	if(groupDcount>=GROUP_MIN && 0==(rand()%GROUP_D_FREQUENCY))return WordGroupD;
+	//For group E, once it gets past the min, we return a word
+	//to work on with a certain frequency
+	if(groupEcount>=GROUP_MIN && 0==(rand()%GROUP_E_FREQUENCY))
+		return WordGroupE;
+
+	//For group D, we return a word to work on with a certain
+	//frequency. The frequency changes if it gets too full
+	if(groupDcount>=GROUP_MIN) {
+		if(groupDcount>=GROUP_D_URGENT_LEVEL) {
+			if     (0==rand()%GROUP_D_URGENT_FREQ) return WordGroupD;
+		   else if(0==(rand()%GROUP_D_FREQUENCY)) return WordGroupD;
+		}
+	}
 
 	//choose a word randomly from group B or C
 	//If we've already chosen 'index' words from this group, then choose a
