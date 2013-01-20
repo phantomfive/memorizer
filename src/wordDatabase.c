@@ -103,8 +103,6 @@ BOOL databaseUpdateWord(const WordForReview *word) {
 			   word->language, word->localWord, word->foreignWord,
 				word->competencyLevel, word->type, lastReviewedTime, word->id);
 	
-	printf("running query: %s\n", query);
-	
 	if(!runResultlessQuery(query, sizeof(query))) {
 		printf("Couldn't update word!\n");
 		return FAIL;
@@ -330,7 +328,6 @@ static BOOL fillWordFromQuery(char *query, WordForReview *word) {
 	sqlite3_stmt *ppStmt;
 	int rv;
 
-	printf("running query %s\n", query);
 	if(sqlite3_prepare_v2(db, query, strlen(query), &ppStmt, NULL)!=SQLITE_OK)
 		return handleError("Error while filling word 1", ppStmt);
 	if((rv=sqlite3_step(ppStmt)) != SQLITE_ROW) {
