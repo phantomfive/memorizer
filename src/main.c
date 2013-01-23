@@ -7,6 +7,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include "wordSelector.h"
 
 #include "main.h"
@@ -15,12 +16,16 @@
 #define YELLOW_ON_BLACK "\033[0;33m"
 #define NORMAL_COLOR "\033[0m"
 
+//This is our current chapter
+static int chapter = 1;
+
+
 /**Choose a compliment for the user*/
 static const char *compliment() {
 	char *list[]  = {"Good Job!", "You are great!", "You're a genius!",
 	                 "Do it again!", "You're awesome!", "Keep up the good work!",
 	                 "You'll learn this in no time!", "Memorizing master!",
-	                 "You're a star!"};
+	                 "You're a star!", "Bringing down the house!", "Memorizer style!" };
 	int listLen = sizeof(list)/sizeof(list[0]);
 	int select = rand()% listLen;
 	return list[select];
@@ -47,11 +52,12 @@ static BOOL readTypedInput(char *buf, int bufLen) {
 		return FAIL;
 	}
 
-	//since we are expecting to read the line from the commandline,
-	//it might have a newline at the end. Chop it off.
+	//chop off extra space and newlines at the end
 	len = strlen(buf);
-	if(buf[len-1]=='\n')
+	while(isspace(buf[len-1])) {
 		buf[len-1] = 0;
+		len--;
+	}
 
 	return SUCCESS;
 }
@@ -138,6 +144,7 @@ static BOOL reviewWords() {
 BOOL addWord() {
 	char eng[100];
 	char rus[100];
+	printf("Currently on chapter %d\n", chapter);
 	printf("Enter English word: ");
 	fgets(eng, sizeof(eng), stdin);
 	eng[strlen(eng)-1] = 0;
@@ -145,12 +152,22 @@ BOOL addWord() {
 	fgets(rus, sizeof(rus), stdin);
 	rus[strlen(rus)-1] = 0;
 
-	if(addNewWordForReview(eng, rus, language)==SUCCESS) {
+	if(addNewWordForReview(eng, rus, language, chapter)==SUCCESS) {
 		printf("Word added\n");
 	}else {
 		printf("Error while adding word\n");
 	}
 	return TRUE;
+}
+
+
+/**Currently we only use the chapter for entering words. Eventually
+   it might be used for reviewing them too*/
+static void changeChapter() {
+	printf("Currently on chapter %d\n", chapter);
+	printf("Select new chapter: ");
+	scanf("%d", &chapter);
+	printf("Chapter %d chosen\n", chapter);
 }
 
 
@@ -168,7 +185,8 @@ int main() {
 		printf("Menu.\n");
 		printf("1) Review Words\n");
 		printf("2) Add word\n");
-		printf("3) Quit\n");
+		printf("3) Select chapter\n");
+		printf("4) Quit\n");
 		printf("--> ");
 
 		if(fgets(input, sizeof(input), stdin)==NULL)
@@ -178,8 +196,9 @@ int main() {
 
 		printf("\n\n\n\n\n\n");
 		if     (choice==1) reviewWords();
-		if     (choice==2) addWord();
-		else if(choice==3) break;
+		else if(choice==2) addWord();
+		else if(choice==3) changeChapter();
+		else if(choice==4) break;
 		else printf("Unrecognized Option\n");
 
 	}

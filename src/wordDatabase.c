@@ -97,10 +97,10 @@ BOOL databaseUpdateWord(const WordForReview *word) {
 
 	snprintf(query, sizeof(query),
 	         "UPDATE WORDS SET language='%s', localWord='%s',"\
-				                 "foreignWord='%s', competencyLevel=%d, "\
+				                 "foreignWord='%s', chapter=%d, competencyLevel=%d, "\
 									  "type=%d, lastReviewedTime='%d' "\
 									  " WHERE id=%d",
-			   word->language, word->localWord, word->foreignWord,
+			   word->language, word->localWord, word->foreignWord, word->chapter,
 				word->competencyLevel, word->type, lastReviewedTime, word->id);
 	
 	if(!runResultlessQuery(query, sizeof(query))) {
@@ -215,7 +215,8 @@ static BOOL createSchema() {
 									 "foreignWord VARCHAR[%lu],\n"\
 									 "competencyLevel INTEGER,\n"\
 									 "type             INTEGER,\n"\
-									 "lastReviewedTime  INTEGER);\n",
+									 "lastReviewedTime  INTEGER,\n"\
+									 "chapter            INTEGER);\n",
 									 sizeof(word->language)-1, sizeof(word->localWord)-1,
 									 sizeof(word->foreignWord)-1);
 						          //We use sizeof() here so that if the size of the
@@ -341,6 +342,7 @@ static BOOL fillWordFromQuery(char *query, WordForReview *word) {
 	strcpy(word->foreignWord, (char*)sqlite3_column_text(ppStmt, 3));
 	word->competencyLevel = sqlite3_column_int(ppStmt, 4);
 	word->type = sqlite3_column_int(ppStmt, 5);
+	word->chapter = sqlite3_column_int(ppStmt, 6);
 
 	if(sqlite3_finalize(ppStmt) != SQLITE_OK)
 		return handleError("Error while finalizing fillWord query", NULL);

@@ -8,7 +8,7 @@
 #include "common.h"
 #include "wordSelector.h"
 
-#define DATABASE_VERSION 1
+#define DATABASE_VERSION 2
 
 /** Should let the callerr choose a database name */
 BOOL setWordDatabaseName(const char *name);

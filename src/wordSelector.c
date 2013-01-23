@@ -61,7 +61,7 @@ WordForReview *getNextWordForReview() {
 }
 
 BOOL addNewWordForReview(const char *localWord, const char *foreignWord,
-                         const char *language) {
+                         const char *language, int chapter) {
 	WordForReview word;
 	strncpy(word.language, language, sizeof(word.language));
 	word.language[sizeof(word.language)-1] = 0;
@@ -74,6 +74,7 @@ BOOL addNewWordForReview(const char *localWord, const char *foreignWord,
 
 	word.type = WordGroupA;
 	word.competencyLevel = 0;
+	word.chapter = chapter;
 
 	return databaseAddWord(&word);
 }

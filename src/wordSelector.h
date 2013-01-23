@@ -1,7 +1,7 @@
 #ifndef WORD_SELECTOR_H
 #define WORD_SELECTOR_H
 /************************************************************
- *  Copyright 2012 andrewthompson10@gmail.com               *
+ *  Copyright 2013 andrewthompson10@gmail.com               *
  *  All Rights Reserved.                                    *
  *  May be used under the terms of the GPL, 3 or higher.    *
  ************************************************************/
@@ -29,6 +29,9 @@ typedef struct WordForReviewStruct {
 
 	/**The word in 'Russian'*/
 	char foreignWord[100];
+	 
+	 /**Indicates what section, or chapter of the book we are in*/
+	 int chapter;
 
 	/**Indicates what review group we are in*/
    WordGroupType type;
@@ -52,7 +55,7 @@ BOOL markWordAsReviewed(WordForReview *word, BOOL result);
 
 /** Adds a word to the database */
 BOOL addNewWordForReview(const char *localWord,  const char *foreignWord, 
-                         const char *language);
+                         const char *language, int chapter);
 
 /**Returns the number of words learned so far. If there is an error,
  * returns -1. */
