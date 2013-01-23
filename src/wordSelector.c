@@ -82,7 +82,7 @@ BOOL addNewWordForReview(const char *localWord, const char *foreignWord,
 
 //This function is too long.......
 #define COMPETENCY_B  5
-#define COMPETENCY_C 10
+#define COMPETENCY_C  8
 #define COMPETENCY_D  7
 #define COMPETENCY_E  3
 BOOL markWordAsReviewed(WordForReview *word, BOOL result) {
