@@ -129,11 +129,11 @@ BOOL databaseAddWord(const WordForReview *word) {
 	snprintf(query,sizeof(query), 
 	     "INSERT INTO words\n"\
 	     "(language, localWord, foreignWord, competencyLevel, "\
-		  "type,lastReviewedTime)\n"\
+		  "type,lastReviewedTime, chapter)\n"\
 		  "VALUES\n"\
 		  "('%s', '%s', '%s', %d, %d, %d)\n",
 		  word->language, word->localWord, word->foreignWord,
-		  word->competencyLevel, word->type, lastReviewedTime);
+		  word->competencyLevel, word->type, lastReviewedTime, word->chapter);
 	
 	if(!runResultlessQuery(query, sizeof(query))) {
 		printf("Couldn't add word!\n");
