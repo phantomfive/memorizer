@@ -131,7 +131,7 @@ BOOL databaseAddWord(const WordForReview *word) {
 	     "(language, localWord, foreignWord, competencyLevel, "\
 		  "type,lastReviewedTime, chapter)\n"\
 		  "VALUES\n"\
-		  "('%s', '%s', '%s', %d, %d, %d)\n",
+		  "('%s', '%s', '%s', %d, %d, %d, %d)\n",
 		  word->language, word->localWord, word->foreignWord,
 		  word->competencyLevel, word->type, lastReviewedTime, word->chapter);
 	
