@@ -1,6 +1,6 @@
-A program to help review and memorize Russian, and Japanese vocabulary words.
+A program to help review and memorize Russian, Korean, and Japanese vocabulary words.
 It can actually be used for any language, but
-I will be updating it from time to time with Russian and Japanese vocabulary.
+I will be updating it from time to time with Russian, Korean and Japanese vocabulary.
 
 To use:
 
@@ -8,6 +8,7 @@ To use:
 2) type: make
 3) type: ./japanese
      or: ./russian
+	  or: ./korean
 
 If you don't have a database, one will be created.
 Relies on SQLite.
