@@ -5,7 +5,7 @@ clean:
 	make -C .. clean
 
 run:
-	@echo "type ../japanese or ../russian"
+	@echo "type cd ..;./japanese or cd ..;./russian"
 
 .PHONY: all clean run
 
