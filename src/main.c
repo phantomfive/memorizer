@@ -152,22 +152,29 @@ static BOOL reviewWords() {
 
 /**UI to add a word to the database*/
 BOOL addWord() {
-	char eng[100];
-	char rus[100];
-	printf("Currently on chapter %d\n", chapter);
-	printf("Enter English word: ");
-	fgets(eng, sizeof(eng), stdin);
-	eng[strlen(eng)-1] = 0;
-	printf("Enter %s word: ", language);
-	fgets(rus, sizeof(rus), stdin);
-	rus[strlen(rus)-1] = 0;
+	char local[100];
+	char foreign[100];
+	while(1) {
+		//read the local word
+		printf("Currently on chapter %d\n", chapter);
+		printf("Enter English word: ");
+		if(!readTypedInput(local, sizeof(local)))
+			return FAIL;
+		
+		//read the foreign word
+		printf("Enter %s word: ", language);
+		if(!readTypedInput(foreign, sizeof(foreign)))
+			return FAIL;
 
-	if(addNewWordForReview(eng, rus, language, chapter)==SUCCESS) {
-		printf("Word added\n");
-	}else {
-		printf("Error while adding word\n");
+		//add the word to the database
+		if(addNewWordForReview(local, foreign, language, chapter)==SUCCESS) {
+			printf("Word added\n\n\n");
+		}else {
+			printf("Error while adding word\n");
+			return FAIL;
+		}
 	}
-	return TRUE;
+	return SUCCESS;
 }
 
 
@@ -194,7 +201,7 @@ int main() {
 	while(1) {
 		printf("Menu.\n");
 		printf("1) Review Words\n");
-		printf("2) Add word\n");
+		printf("2) Add words\n");
 		printf("3) Select chapter\n");
 		printf("4) Quit\n");
 		printf("--> ");
