@@ -47,7 +47,7 @@ static void printWelcome() {
 /**Read input from the user. This needs to be cleaned up, but
   *that will be done during the UI design phase*/
 static BOOL readTypedInput(char *buf, int bufLen) {
-	int len;
+	int len, spaceCount=0, i;
 	if(fgets(buf, bufLen, stdin)==NULL) {
 		return FAIL;
 	}
@@ -59,6 +59,16 @@ static BOOL readTypedInput(char *buf, int bufLen) {
 		len--;
 	}
 
+	//chop off extra space from the beginning
+	while(isspace(buf[spaceCount])) {
+		spaceCount++;
+	}
+	if(spaceCount>0) {
+		for(i=spaceCount;i<=len;i++) {
+			buf[i-spaceCount] = buf[i];
+		}
+	}
+	
 	return SUCCESS;
 }
 
