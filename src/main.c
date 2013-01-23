@@ -84,7 +84,7 @@ static void reviewBasicWord(WordForReview *word) {
 	if(!readTypedInput(input, sizeof(input)))
 		exit(-1);
 
-	if(!strcmp(input, word->localWord)) {
+	if(!strcasecmp(input, word->localWord)) {
 		printf("   "YELLOW_ON_BLACK"YES!"NORMAL_COLOR" %s\n", compliment());
 		markWordAsReviewed(word, SUCCESS);
 	}
