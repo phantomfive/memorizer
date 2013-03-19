@@ -224,6 +224,9 @@ static BOOL putWordsInArray(WordForReview *words, int quantity) {
 
 
 #define NEW_WORDS_TO_REVIEW_AT_A_TIME 10
+#define GROUP_B_MAX 5  //we don't want to have too many new words,
+                       //so this is the maximum number of new words
+							  //to be studying at a time
 #define GROUP_MIN 40
 #define GROUP_D_FREQUENCY 4
 #define GROUP_D_URGENT_FREQ 3 //if wordcount gets too high for group D,
@@ -247,7 +250,7 @@ static WordGroupType chooseNextWordGroup(int quantity, int index) {
 	//If we have learned all the words in our review set, then
 	//get some more from group A and start learning them!
 	if(groupBcount+groupCcount+index < NEW_WORDS_TO_REVIEW_AT_A_TIME 
-	   && groupAcount>index)
+	   && groupAcount>index && groupBcount<GROUP_B_MAX)
 		 return WordGroupA;
 
 	//For group E, once it gets past the min, we return a word
