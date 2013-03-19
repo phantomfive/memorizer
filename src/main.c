@@ -25,7 +25,8 @@ static const char *compliment() {
 	char *list[]  = {"Good Job!", "You are great!", "You're a genius!",
 	                 "Do it again!", "You're awesome!", "Keep up the good work!",
 	                 "You'll learn this in no time!", "Memorizing master!",
-	                 "You're a star!", "Bringing down the house!", "Memorizer style!" };
+	                 "You're a star!", "Bringing down the house!", 
+						  "Memorizer style!", "Beethoven wrote a symphony about you!" };
 	int listLen = sizeof(list)/sizeof(list[0]);
 	int select = rand()% listLen;
 	return list[select];
