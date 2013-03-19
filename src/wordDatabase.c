@@ -97,12 +97,12 @@ BOOL databaseUpdateWord(const WordForReview *word) {
 
 	snprintf(query, sizeof(query),
 	         "UPDATE WORDS SET language='%s', localWord='%s',"\
-				                 "foreignWord='%s', chapter=%d, competencyLevel=%d, "\
-									  "type=%d, lastReviewedTime='%d' "\
-									  " WHERE id=%d",
+				               "foreignWord='%s', chapter=%d, competencyLevel=%d, "\
+								   "type=%d, lastReviewedTime='%d' "\
+									" WHERE id=%d",
 			   word->language, word->localWord, word->foreignWord, word->chapter,
 				word->competencyLevel, word->type, lastReviewedTime, word->id);
-	
+
 	if(!runResultlessQuery(query, sizeof(query))) {
 		printf("Couldn't update word!\n");
 		return FAIL;
@@ -342,7 +342,8 @@ static BOOL fillWordFromQuery(char *query, WordForReview *word) {
 	strcpy(word->foreignWord, (char*)sqlite3_column_text(ppStmt, 3));
 	word->competencyLevel = sqlite3_column_int(ppStmt, 4);
 	word->type = sqlite3_column_int(ppStmt, 5);
-	word->chapter = sqlite3_column_int(ppStmt, 6);
+	word->competencyLevel = sqlite3_column_int(ppStmt, 6);
+	word->chapter = sqlite3_column_int(ppStmt, 7);
 
 	if(sqlite3_finalize(ppStmt) != SQLITE_OK)
 		return handleError("Error while finalizing fillWord query", NULL);
