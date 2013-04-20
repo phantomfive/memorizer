@@ -99,7 +99,7 @@ BOOL reviewWords(int chapter) {
 		WordForReview *word = getNextWordForReview();
 		if(word==NULL) {
 			printf("Cannot go on! Exiting.\n");
-			return FAIL;
+			exit(-1);
 		}
         
 		if(word->type==WordGroupA || word->type==WordGroupB)
