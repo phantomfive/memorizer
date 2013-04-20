@@ -25,8 +25,8 @@ static void printWelcome() {
 	printf("Welcome to %s!\n", language);
 	
 	// Only show them how many words they've learned
-    // if it's high enough, so they don't get demoralized
-    // too easily.
+	// if it's high enough, so they don't get demoralized
+	// too easily.
 	wordsLearned = getNumberOfWordsMemorized();
 	if(wordsLearned>21) {
 		printf("You have learned %d words so far.\n", wordsLearned);
@@ -85,7 +85,6 @@ static BOOL runUserChoice() {
 /**Obviously, this is where it all starts.*/
 int main() {
 	srand(time(NULL));
-
 	selectWordLanguage(language);
     
 	printWelcome();
