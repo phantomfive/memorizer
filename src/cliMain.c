@@ -24,8 +24,9 @@ static void printWelcome() {
 	int wordsLearned;
 	printf("Welcome to %s!\n", language);
 	
-	//Only show them how many words they've learned if it's high enough,
-	//so they don't get demoralized too easily.
+	// Only show them how many words they've learned
+    // if it's high enough, so they don't get demoralized
+    // too easily.
 	wordsLearned = getNumberOfWordsMemorized();
 	if(wordsLearned>21) {
 		printf("You have learned %d words so far.\n", wordsLearned);
@@ -34,8 +35,10 @@ static void printWelcome() {
 }
 		
 
-/**Currently we only use the chapter for entering words. Eventually
- it might be used for reviewing them too*/
+/**Currently we only use the chapter
+ * for entering words. Eventually
+ * it might be used for reviewing
+ * them too*/
 static void changeChapter() {
 	printf("Currently on chapter %d\n", chapter);
 	printf("Select new chapter: ");
@@ -44,37 +47,53 @@ static void changeChapter() {
 }
 
 
-int main() {
-	char input[1000];
-	int choice; 
+/**Shows the menu of
+ * all possibilities*/
+static BOOL showMenu() {
+    printf("Menu.\n");
+    printf("1) Review Words\n");
+    printf("2) Add words\n");
+    printf("3) Select chapter\n");
+    printf("4) Quit\n");
+    printf("--> ");
+    return SUCCESS;
+}
 
+
+/**Reads the menu choice 
+ * from stdin and runs 
+ * it if possible.*/
+static BOOL runUserChoice() {
+	char input[1000];
+	int choice;
+    
+    if(fgets(input, sizeof(input), stdin)==NULL)
+        return FAIL;
+    choice = atoi(input);
+    
+    printf("\n\n\n\n\n\n");
+    if     (choice==1) reviewWords(chapter);
+    else if(choice==2) addWords(chapter);
+    else if(choice==3) changeChapter();
+    else if(choice==4) return FAIL;
+    else printf("Unrecognized Option\n");
+    
+    return SUCCESS;
+}
+
+
+/**Obviously, this is where it all starts.*/
+int main() {
 	srand(time(NULL));
 
 	selectWordLanguage(language);
-
+    
 	printWelcome();
 
-	while(1) {
-		printf("Menu.\n");
-		printf("1) Review Words\n");
-		printf("2) Add words\n");
-		printf("3) Select chapter\n");
-		printf("4) Quit\n");
-		printf("--> ");
-
-		if(fgets(input, sizeof(input), stdin)==NULL)
-			break;
-
-		choice = atoi(input);	
-
-		printf("\n\n\n\n\n\n");
-		if     (choice==1) reviewWords(chapter);
-		else if(choice==2) addWords(chapter);
-		else if(choice==3) changeChapter();
-		else if(choice==4) break;
-		else printf("Unrecognized Option\n");
-
-	}
+	while(
+        showMenu() &&
+        runUserChoice()
+    );
 
 	return 0;
 }
