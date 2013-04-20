@@ -35,18 +35,6 @@ static void printWelcome() {
 }
 		
 
-/**Currently we only use the chapter
- * for entering words. Eventually
- * it might be used for reviewing
- * them too*/
-static void changeChapter() {
-	printf("Currently on chapter %d\n", chapter);
-	printf("Select new chapter: ");
-	scanf("%d", &chapter);
-	printf("Chapter %d chosen\n", chapter);
-}
-
-
 /**Shows the menu of
  * all possibilities*/
 static BOOL showMenu() {
@@ -82,13 +70,25 @@ static BOOL runUserChoice() {
 }
 
 
+/**Currently we only use the chapter
+ * for entering words. Eventually
+ * it might be used for reviewing
+ * them too*/
+static void changeChapter() {
+	printf("Currently on chapter %d\n", chapter);
+	printf("Select new chapter: ");
+	scanf("%d", &chapter);
+	printf("Chapter %d chosen\n", chapter);
+}
+
+
+
 /**Obviously, this is where it all starts.*/
 int main() {
 	srand(time(NULL));
 	selectWordLanguage(language);
     
 	printWelcome();
-
 	while(
         showMenu() &&
         runUserChoice()
