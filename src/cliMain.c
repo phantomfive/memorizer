@@ -67,11 +67,11 @@ static BOOL runUserChoice() {
 	char input[1000];
 	int choice;
     
+    printf("\n\n\n\n\n\n");
     if(fgets(input, sizeof(input), stdin)==NULL)
         return FAIL;
     choice = atoi(input);
     
-    printf("\n\n\n\n\n\n");
     if     (choice==1) reviewWords(chapter);
     else if(choice==2) addWords(chapter);
     else if(choice==3) changeChapter();
