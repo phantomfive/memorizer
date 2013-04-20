@@ -4,7 +4,9 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-//define basic boolean type
+//define basic boolean type.
+//Define anythign anyone would
+//ever want to use as boolean.
 #ifndef TRUE
 #define TRUE 1
 #endif
