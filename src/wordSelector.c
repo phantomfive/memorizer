@@ -231,7 +231,7 @@ static BOOL putWordsInArray(WordForReview *words, int quantity) {
 #define GROUP_D_FREQUENCY 4
 #define GROUP_D_URGENT_FREQ 3 //if wordcount gets too high for group D,
                               //we increase the frequency of showing it
-#define GROUP_D_URGENT_LEVEL 350
+#define GROUP_D_URGENT_LEVEL 150 
 #define GROUP_E_FREQUENCY 12
 static WordGroupType chooseNextWordGroup(int quantity, int index) {
 	int groupBcount;
