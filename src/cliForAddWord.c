@@ -20,7 +20,7 @@ BOOL addWords(int chapter) {
 			return FAIL;
         
 		//add the word to the database
-		if(addNewWordForReview(local, foreign, language, chapter)==SUCCESS) {
+		if(addNewWordForReview(local, foreign, language,"", chapter)==SUCCESS) {
 			printf("Word added\n\n\n");
 		}else {
 			printf("Error while adding word\n");

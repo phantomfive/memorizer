@@ -29,12 +29,16 @@ typedef struct WordForReviewStruct {
 
 	/**The word in 'Russian'*/
 	char foreignWord[100];
+
+	/**A hint for the word. Useful for learning ideograms.*/
+	char hint[2000];
+
+	/**Indicates what review group we are in*/
+   WordGroupType type;
 	 
 	 /**Indicates what section, or chapter of the book we are in*/
 	 int chapter;
 
-	/**Indicates what review group we are in*/
-   WordGroupType type;
 
 	/**Indicates the competency level within the review group.
 	  *See markWordAsReviewed() for details*/
@@ -53,9 +57,10 @@ WordForReview *getNextWordForReview();
 	 'word' gets updated with the new data. Fails only on database error.*/
 BOOL markWordAsReviewed(WordForReview *word, BOOL result);
 
-/** Adds a word to the database */
+/** Adds a word to the database. If any field is NULL, it will be
+ *  replaced with an empty string.*/
 BOOL addNewWordForReview(const char *localWord,  const char *foreignWord, 
-                         const char *language, int chapter);
+                         const char *language, const char *hint, int chapter);
 
 /**Returns the number of words learned so far. If there is an error,
  * returns -1. */

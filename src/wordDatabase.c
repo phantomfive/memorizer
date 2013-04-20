@@ -12,6 +12,11 @@
 static sqlite3 *db=NULL;
 static char dbName[1500] = "data.db"; //default database name
 
+//When I added hints, the potential size of a query grew,
+//so I had to change the string size everywhere. That was
+//annoying so I decided to define it in one place
+#define QUERY_SIZE (sizeof(WordForReview) + 10000)
+
 //forward declarations
 static BOOL init();
 static BOOL createSchema();
@@ -44,7 +49,7 @@ BOOL setWordDatabaseName(const char *name) {
 
 BOOL databaseFillWordFromGroup(WordForReview *word, int index, 
                                WordGroupType type) {
-	char query[10000];
+	char query[QUERY_SIZE];
 	if(!init()) return FAIL;
 	
 	snprintf(query, sizeof(query), "SELECT * FROM WORDS where type=%d", type);
@@ -54,7 +59,7 @@ BOOL databaseFillWordFromGroup(WordForReview *word, int index,
 
 BOOL databaseFillWordFromGroupOrderByLeastRecent(WordForReview*word, int index,
                                                  WordGroupType type) {
-	char query[10000];
+	char query[QUERY_SIZE];
 	if(!init()) return FAIL;
 
 	snprintf(query, sizeof(query), "SELECT * FROM WORDS where type=%d", type);
@@ -66,7 +71,7 @@ BOOL databaseFillWordFromGroupOrderByLeastRecent(WordForReview*word, int index,
 
 BOOL databaseFillWordFromGroupOrderByLeastSkilled(WordForReview*word,int index,
                                                  WordGroupType type) {
-	char query[10000];	
+	char query[QUERY_SIZE];	
 	if(!init()) return FAIL;
 	
 	snprintf(query, sizeof(query),  "SELECT * FROM WORDS where type=%d", type);
@@ -77,7 +82,7 @@ BOOL databaseFillWordFromGroupOrderByLeastSkilled(WordForReview*word,int index,
 
 
 BOOL databaseGetCountForWordGroup(WordGroupType type, int *count) {
-	char query[1000];
+	char query[QUERY_SIZE];
 	if(!init()) return FAIL;
 
 	snprintf(query,sizeof(query), 
@@ -87,7 +92,7 @@ BOOL databaseGetCountForWordGroup(WordGroupType type, int *count) {
 
 BOOL databaseUpdateWord(const WordForReview *word) {
 	int lastReviewedTime = -1;
-	char query[1000];
+	char query[QUERY_SIZE];
 	if(!init()) return FAIL;
 
 	if(!getLastReviewTime(&lastReviewedTime)) {
@@ -96,12 +101,13 @@ BOOL databaseUpdateWord(const WordForReview *word) {
 	}
 
 	snprintf(query, sizeof(query),
-	         "UPDATE WORDS SET language='%s', localWord='%s',"\
-				               "foreignWord='%s', chapter=%d, competencyLevel=%d, "\
-								   "type=%d, lastReviewedTime='%d' "\
-									" WHERE id=%d",
-			   word->language, word->localWord, word->foreignWord, word->chapter,
-				word->competencyLevel, word->type, lastReviewedTime, word->id);
+	       "UPDATE WORDS SET language='%s', localWord='%s', foreignWord='%s',"\
+	                        " hint='%s', chapter=%d, competencyLevel=%d, "\
+	                        " type=%d, lastReviewedTime='%d'"\
+	                        " WHERE id=%d",
+			   word->language, word->localWord, word->foreignWord, word->hint, 
+	         word->chapter, word->competencyLevel, word->type, lastReviewedTime,
+				word->id);
 
 	if(!runResultlessQuery(query, sizeof(query))) {
 		printf("Couldn't update word!\n");
@@ -116,7 +122,7 @@ BOOL databaseUpdateWord(const WordForReview *word) {
 }
 
 BOOL databaseAddWord(const WordForReview *word) {
-	char query[1000];
+	char query[QUERY_SIZE];
 	int lastReviewedTime=-1;
 	if(!init()) return FAIL;
 
@@ -128,12 +134,13 @@ BOOL databaseAddWord(const WordForReview *word) {
 
 	snprintf(query,sizeof(query), 
 	     "INSERT INTO words\n"\
-	     "(language, localWord, foreignWord, competencyLevel, "\
+	     "(language, localWord, foreignWord, hint, competencyLevel, "\
 		  "type,lastReviewedTime, chapter)\n"\
 		  "VALUES\n"\
-		  "('%s', '%s', '%s', %d, %d, %d, %d)\n",
+		  "('%s', '%s', '%s', '%s', %d,  %d,  %d,  %d)\n",
 		  word->language, word->localWord, word->foreignWord,
-		  word->competencyLevel, word->type, lastReviewedTime, word->chapter);
+		  word->hint, word->competencyLevel, word->type,
+		  lastReviewedTime, word->chapter);
 	
 	if(!runResultlessQuery(query, sizeof(query))) {
 		printf("Couldn't add word!\n");
@@ -204,7 +211,7 @@ static BOOL closeDatabase() {
 /**Tries to create the schema for the newly opened datase. Returns SUCCESS,
   *or prints an error message and returns FAIL*/
 static BOOL createSchema() {
-	char query[1000];
+	char query[QUERY_SIZE];
 	WordForReview *word;
 
 	snprintf(query, sizeof(query), 
@@ -216,9 +223,10 @@ static BOOL createSchema() {
 									 "competencyLevel INTEGER,\n"\
 									 "type             INTEGER,\n"\
 									 "lastReviewedTime  INTEGER,\n"\
-									 "chapter            INTEGER);\n",
+									 "chapter            INTEGER,\n"\
+									 "hint                VARCHAR[%lu]);\n",\
 									 sizeof(word->language)-1, sizeof(word->localWord)-1,
-									 sizeof(word->foreignWord)-1);
+									 sizeof(word->foreignWord)-1, sizeof(word->hint)-1);
 						          //We use sizeof() here so that if the size of the
 								    //struct in the header file changes, this changes
 								    //automatically to match. Of course, only on new
@@ -228,7 +236,6 @@ static BOOL createSchema() {
 
 	//Create a table with singleton variables, one for the last reviewed integer,
 	//which will always increment, and one with the version of the db schema.
-	//right now we are not using the version, but it never hurts to have one.
 	snprintf(query, sizeof(query), "CREATE TABLE GLOBAL(\n"\
 	                               "lastReviewed INTEGER,\n"\
 											 "version      INTEGER);\n");
@@ -344,6 +351,7 @@ static BOOL fillWordFromQuery(char *query, WordForReview *word) {
 	word->type = sqlite3_column_int(ppStmt, 5);
 	word->competencyLevel = sqlite3_column_int(ppStmt, 6);
 	word->chapter = sqlite3_column_int(ppStmt, 7);
+	strcpy(word->hint, (char*)sqlite3_column_text(ppStmt, 8));
 
 	if(sqlite3_finalize(ppStmt) != SQLITE_OK)
 		return handleError("Error while finalizing fillWord query", NULL);

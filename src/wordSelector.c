@@ -61,8 +61,14 @@ WordForReview *getNextWordForReview() {
 }
 
 BOOL addNewWordForReview(const char *localWord, const char *foreignWord,
-                         const char *language, int chapter) {
+                         const char *language, const char *hint, int chapter) {
 	WordForReview word;
+
+	if(foreignWord==NULL) foreignWord="";
+	if(localWord  ==NULL) localWord  ="";
+	if(language   ==NULL) language   ="";
+	if(hint       ==NULL) hint       ="";
+
 	strncpy(word.language, language, sizeof(word.language));
 	word.language[sizeof(word.language)-1] = 0;
 
@@ -71,6 +77,9 @@ BOOL addNewWordForReview(const char *localWord, const char *foreignWord,
 
 	strncpy(word.foreignWord, foreignWord, sizeof(word.foreignWord));
 	word.foreignWord[sizeof(word.foreignWord)-1] = 0;
+	
+	strncpy(word.hint, hint, sizeof(word.hint));
+	word.hint[sizeof(word.hint)-1] = 0;
 
 	word.type = WordGroupA;
 	word.competencyLevel = 0;
