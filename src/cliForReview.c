@@ -18,14 +18,14 @@ static const char *compliment() {
 	     "Good Job!", 
 		  "You are great!", 
 		  "You're a genius!",
-        "Do it again!", 
+	     "Do it again!", 
 		  "You're awesome!", 
 		  "Keep up the good work!",
-        "You'll learn this in no time!", 
+	     "You'll learn this in no time!", 
 		  "Memorizing master!",
         "You're a star!", 
-		  "Bringing down the house!",
-        "Memorizer style!", 
+	     "Bringing down the house!",
+	     "Memorizer style!", 
 		  "Beethoven wrote a symphony about you!",
 		  "Wow!"};
 	int listLen = sizeof(list)/sizeof(list[0]);
