@@ -90,8 +90,8 @@ int main() {
     
 	printWelcome();
 	while(
-        showMenu() &&
-        runUserChoice()
+		showMenu() &&
+		runUserChoice()
     );
 
 	return 0;
