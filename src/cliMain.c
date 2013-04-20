@@ -92,7 +92,7 @@ int main() {
 	while(
 		showMenu() &&
 		runUserChoice()
-    );
+	);
 
 	return 0;
 }
