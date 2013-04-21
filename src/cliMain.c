@@ -16,15 +16,13 @@
 #include "compileChoices.h"
 
 
-//This is our current chapter
-static int chapter = 1;
 
 
 static void printWelcome() {
 	int wordsLearned;
 	printf("Welcome to %s!\n", language);
 	
-	// Only show them how many words they've learned
+	// Sshow them how many words they've learned only
 	// if it's high enough, so they don't get demoralized
 	// too easily.
 	wordsLearned = getNumberOfWordsMemorized();
@@ -34,6 +32,25 @@ static void printWelcome() {
 	printf("\n");
 }
 		
+
+
+//This is our current chapter
+static int chapter = 1;
+
+/**Currently we only use the chapter
+ * for entering words. Eventually
+ * it might be used for reviewing
+ * them too*/
+static void changeChapter() {
+	printf("Currently on chapter %d\n", chapter);
+	printf("Select new chapter: ");
+	scanf("%d", &chapter);
+	printf("Chapter %d chosen\n", chapter);
+}
+
+
+
+
 
 /**Shows the menu of
  * all possibilities*/
@@ -46,6 +63,7 @@ static BOOL showMenu() {
     printf("--> ");
     return SUCCESS;
 }
+
 
 
 /**Reads the menu choice 
@@ -70,16 +88,6 @@ static BOOL runUserChoice() {
 }
 
 
-/**Currently we only use the chapter
- * for entering words. Eventually
- * it might be used for reviewing
- * them too*/
-static void changeChapter() {
-	printf("Currently on chapter %d\n", chapter);
-	printf("Select new chapter: ");
-	scanf("%d", &chapter);
-	printf("Chapter %d chosen\n", chapter);
-}
 
 
 

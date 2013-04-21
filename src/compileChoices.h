@@ -18,7 +18,7 @@ static const char *language = "Japanese";
 
 #ifdef JAPANESE_CHARS
 static const char *language = "JapaneseChars";
-#define COMPLEX
+#define CHARACTER_BASED YES
 #endif
 
 #ifdef KOREAN
@@ -26,8 +26,12 @@ static const char *language = "Korean";
 #endif
 
 
-
-
+//We review character based databases differently
+//because their purpose is to teach characters,
+//not words
+#ifndef CHARACTER_BASED
+#define CHARACTER_BASED NO
+#endif
 
 
 #endif
