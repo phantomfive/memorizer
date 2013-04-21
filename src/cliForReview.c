@@ -115,8 +115,6 @@ static void showAdvancedWord(WordForReview *word, char *input, int size) {
 	if(!readTypedInput(input, size))
 		exit(-1);
 
-	printf("READ THE ANSWER: %s\n", input);
-	
 	//If they asked for a hint, show it and
 	//read more input for their answer
 	if(CHARACTER_BASED && !strcasecmp(input, "h")) {
@@ -134,7 +132,6 @@ static BOOL checkAdvancedAnswer(WordForReview *word, char *answer) {
 	//If it's not character based, this is easy,
 	//just check they they typed the correct word
 	if(!CHARACTER_BASED) {
-		printf("answer is %s\n", answer);
 		if(!strcmp(answer, word->foreignWord)) {
 			printf("   "YELLOW_ON_BLACK"YES!"NORMAL_COLOR " %s\n", compliment());
 			return SUCCESS;
