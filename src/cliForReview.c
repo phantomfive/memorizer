@@ -62,10 +62,14 @@ static void reviewBasicWord(WordForReview *word) {
 	//Show them the word and
 	//give them a prompt
 	printf("----\n");
-	printf("The %s word is " GREEN_ON_BLACK "%s" NORMAL_COLOR".\n",
-	       language, word->foreignWord);
-	//If it's character based, show them the hint
-	if(CHARACTER_BASED) {
+	if(!CHARACTER_BASED) {
+		printf("The %s word is " GREEN_ON_BLACK "%s" NORMAL_COLOR".\n",
+	   	    language, word->foreignWord);
+	}
+	else {
+	   //If it's character based, show them the hint
+		printf("The %s is " GREEN_ON_BLACK "%s" NORMAL_COLOR".\n",
+		       language, word->foreignWord);
 		printf("The hint is %s.\n", word->hint);
 	}
 	printf("Can you guess the English word? --> ");
@@ -94,7 +98,7 @@ static void reviewBasicWord(WordForReview *word) {
 // Methods for advanced words
 //---------------------------------------------------------------
 
-static void showAdvancedWord(WordForReview *word, char *input) {
+static void showAdvancedWord(WordForReview *word, char *input, int size) {
 
 	//print the prompt
 	printf("----\n");
@@ -104,12 +108,14 @@ static void showAdvancedWord(WordForReview *word, char *input) {
 		printf("Press <Enter> when you know the character, "\
 		       " or 'h' for a hint\n<ENTER>\n");
 	}else{
-		printf(" Can you guess the %s word%s? --> ", word->localWord, language);
+		printf(" Can you guess the %s word? --> ", language);
    }
 
 	//read the answer
-	if(!readTypedInput(input, sizeof(input)))
+	if(!readTypedInput(input, size))
 		exit(-1);
+
+	printf("READ THE ANSWER: %s\n", input);
 	
 	//If they asked for a hint, show it and
 	//read more input for their answer
@@ -128,7 +134,8 @@ static BOOL checkAdvancedAnswer(WordForReview *word, char *answer) {
 	//If it's not character based, this is easy,
 	//just check they they typed the correct word
 	if(!CHARACTER_BASED) {
-		if(!strcasecmp(answer, word->foreignWord)) {
+		printf("answer is %s\n", answer);
+		if(!strcmp(answer, word->foreignWord)) {
 			printf("   "YELLOW_ON_BLACK"YES!"NORMAL_COLOR " %s\n", compliment());
 			return SUCCESS;
 		}else{
@@ -167,7 +174,7 @@ static void reviewAdvancedWord(WordForReview *word) {
 	BOOL result;
 
 	//show the word and let them guess it
-	showAdvancedWord(word, input);
+	showAdvancedWord(word, input, sizeof(input));
 
 
 	//Display the correct output if they got it right,

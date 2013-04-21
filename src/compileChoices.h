@@ -17,7 +17,7 @@ static const char *language = "Japanese";
 #endif
 
 #ifdef JAPANESE_CHARS
-static const char *language = "JapaneseChars";
+static const char *language = "Japanese character";
 #define CHARACTER_BASED YES
 #endif
 

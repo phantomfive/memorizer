@@ -11,7 +11,7 @@ LDFLAGS= -lsqlite3
 CSRC := $(wildcard src/*.c)
 HDRS := $(wildcard src/*.h)
 
-all: japanese russian korean
+all: japanese russian korean japaneseCharacters
 
 japanese: $(CSRC) $(HDRS)
 	$(CC) -o japanese -D JAPANESE $(CCFLAGS) $(LDFLAGS) $(CSRC)
@@ -21,6 +21,10 @@ russian: $(CSRC) $(HDRS)
 
 korean: $(CSRC) $(HDRS)
 	$(CC) -o korean -D KOREAN $(CCFLAGS) $(LDFLAGS) $(CSRC)
+
+japaneseCharacters: $(CSRC) $(HDRS)
+	$(CC) -o japaneseCharacters -D JAPANESE_CHARS $(CCFLAGS) $(LDFLAGS) $(CSRC)
+
 
 clean:
 	rm -rf japanese russian russian.dSYM japanese.dSYM korean korean.dSYM
