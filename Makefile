@@ -30,7 +30,7 @@ clean:
 	rm -rf japanese russian russian.dSYM japanese.dSYM korean korean.dSYM
 
 run:
-	@echo type ./japanese or ./russian or ./korean
+	@echo type ./japanese or ./russian or ./korean or ./japaneseCharacters
 
 .PHONY: clean all
 
