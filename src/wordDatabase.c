@@ -349,7 +349,7 @@ static BOOL fillWordFromQuery(char *query, WordForReview *word) {
 	strcpy(word->foreignWord, (char*)sqlite3_column_text(ppStmt, 3));
 	word->competencyLevel = sqlite3_column_int(ppStmt, 4);
 	word->type = sqlite3_column_int(ppStmt, 5);
-	word->competencyLevel = sqlite3_column_int(ppStmt, 6);
+	/*int lastReviewTime =*/ sqlite3_column_int(ppStmt, 6);
 	word->chapter = sqlite3_column_int(ppStmt, 7);
 	strcpy(word->hint, (char*)sqlite3_column_text(ppStmt, 8));
 
