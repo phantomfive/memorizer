@@ -139,6 +139,10 @@ static BOOL checkAdvancedAnswer(WordForReview *word, char *answer) {
 		}else{
 			printf("   " GREEN_ON_BLACK "%s" NORMAL_COLOR
 		       " is the word for %s\n", word->foreignWord, word->localWord);
+				//give them a chance to breath before moving on
+				printf("   <Press Enter>\n");
+				if(!readTypedInput(input, sizeof(input)))
+					exit(-1);
 		}
 	}
 	else {
@@ -158,7 +162,11 @@ static BOOL checkAdvancedAnswer(WordForReview *word, char *answer) {
 			return SUCCESS;
 		}
 		else {
-			printf("ok.\n");
+			printf("ok, do better.\n");
+			//give them a chance to breath before moving on
+			printf("   <Press Enter>\n");
+			if(!readTypedInput(input, sizeof(input)))
+				exit(-1);
 		}
 	}
 
@@ -180,10 +188,6 @@ static void reviewAdvancedWord(WordForReview *word) {
 	result = checkAdvancedAnswer(word, input);
 	markWordAsReviewed(word, result);
 	
-	//give them a chance to breath before moving on
-	printf("   [Press Enter]\n");
-	if(!readTypedInput(input, sizeof(input)))
-		exit(-1);
 }
 
 
