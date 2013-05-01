@@ -42,8 +42,9 @@ static const char *compliment() {
 	     "You're a star!", 
 	     "Bringing down the house!",
 	     "Memorizer style!", 
-	     "Beethoven wrote a symphony about you!",
-	     "Wow!"};
+	     "Beethoven must have written a symphony about you!",
+	     "Wow!",
+		  "Keep climbing the mountain, three steps at a time!"};
 	int listLen = sizeof(list)/sizeof(list[0]);
 	int select = rand()% listLen;
 	return list[select];
@@ -145,7 +146,7 @@ static BOOL checkAdvancedAnswer(WordForReview *word, char *answer) {
 		//way of checking right now. Someday, I will implement
 		//handwriting recognition. Until then, we will
 		//ask them if they got it right. We have to trust them.
-		printf("The word is"YELLOW_ON_BLACK" %s"NORMAL_COLOR".\n",
+		printf("The word is"GREEN_ON_BLACK" %s"NORMAL_COLOR".\n",
 		       word->foreignWord);
 		printf("Now, did you get it right? (y/n) -->");
 		if(!readTypedInput(input, sizeof(input)))
@@ -200,6 +201,10 @@ BOOL reviewWords(int chapter) {
 			printf("Cannot go on! Exiting.\n");
 			exit(-1);
 		}
+
+		//this is printed for debugging
+		//printf("Word group before review %d, skill %d, id %d, chapter %d\n",
+		//	word->type, word->competencyLevel, word->id, word->chapter);
         
 		if(word->type==WordGroupA || word->type==WordGroupB)
 			reviewBasicWord(word);
@@ -207,9 +212,9 @@ BOOL reviewWords(int chapter) {
 			reviewAdvancedWord(word);
         
         
-        //this is printed for debugging
-		printf("word group %d, skill %d, id %d\n",word->type,
-               word->competencyLevel,
-               word->id);
+      //this is printed for debugging
+		//printf("word group %d, skill %d, id %d\n",word->type,
+      //         word->competencyLevel,
+      //         word->id);
 	}
 }
