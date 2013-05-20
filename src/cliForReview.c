@@ -163,10 +163,6 @@ static BOOL checkAdvancedAnswer(WordForReview *word, char *answer) {
 		}
 		else {
 			printf("ok, do better.\n");
-			//give them a chance to breath before moving on
-			printf("   <Press Enter>\n");
-			if(!readTypedInput(input, sizeof(input)))
-				exit(-1);
 		}
 	}
 
