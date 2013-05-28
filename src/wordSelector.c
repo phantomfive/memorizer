@@ -236,12 +236,21 @@ static BOOL putWordsInArray(WordForReview *words, int quantity) {
 #define GROUP_B_MAX 5  //we don't want to have too many new words,
                        //so this is the maximum number of new words
 							  //to be studying at a time
-#define GROUP_MIN 40
-#define GROUP_D_FREQUENCY 4
-#define GROUP_D_URGENT_FREQ 3 //if wordcount gets too high for group D,
-                              //we increase the frequency of showing it
-#define GROUP_D_URGENT_LEVEL 150 
-#define GROUP_E_FREQUENCY 12
+#define GROUP_E_MIN 40  //must have this many in Ebefore we start reviewing them
+#define GROUP_E_FREQUENCY 12 //Show E 1 out of this many times
+
+//Group D is words that are mostly learned. When there are few in this group, we
+//don't show them very often. We start showing them when there are more than
+//GROUP_D_MIN. At that point, we show them once out of every GROUP_D_MIN_FREQ
+//times.
+//As the group fills up, we show them more and more often. By the time there
+//are GROUP_D_MAX in that group, we show them once out of every
+//GROUP_D_MAX_FREQ
+#define GROUP_D_MIN 10
+#define GROUP_D_MAX 150
+#define GROUP_D_MIN_FREQ 14
+#define GROUP_D_MAX_FREQ  2
+
 static WordGroupType chooseNextWordGroup(int quantity, int index) {
 	int groupBcount;
 	int groupCcount;
@@ -264,16 +273,19 @@ static WordGroupType chooseNextWordGroup(int quantity, int index) {
 
 	//For group E, once it gets past the min, we return a word
 	//to work on with a certain frequency
-	if(groupEcount>=GROUP_MIN && 0==(rand()%GROUP_E_FREQUENCY))
+	if(groupEcount>=GROUP_E_MIN && 0==(rand()%GROUP_E_FREQUENCY))
 		return WordGroupE;
 
 	//For group D, we return a word to work on with a certain
 	//frequency. The frequency changes if it gets too full
-	if(groupDcount>=GROUP_MIN) {
-		if(groupDcount>=GROUP_D_URGENT_LEVEL) {
-			if     (0==rand()%GROUP_D_URGENT_FREQ) return WordGroupD;
-		   else if(0==(rand()%GROUP_D_FREQUENCY)) return WordGroupD;
-		}
+	if(groupDcount>=GROUP_D_MIN) {
+		int frequency;
+		int countPct = 100 - ((groupDcount*100) / GROUP_D_MAX);
+		if(countPct > 100) groupDcount = 100;
+		frequency = (GROUP_D_MIN_FREQ-GROUP_D_MAX_FREQ)*countPct+GROUP_D_MAX_FREQ;
+		frequency /= 100;
+		printf("Selecting D, countPct %d, frequency %d\n", countPct, frequency);
+		if(0==(rand()%frequency)) return WordGroupD;
 	}
 
 	//choose a word randomly from group B or C
