@@ -44,7 +44,12 @@ static const char *compliment() {
 	     "Memorizer style!", 
 	     "Beethoven must have written a symphony about you!",
 	     "Wow!",
-		  "Keep climbing the mountain, three steps at a time!"};
+		  "Keep climbing the mountain, three steps at a time!",
+		  "Fabulous",
+		  "Marvelous",
+		  "Good like Superman",
+		  "Rockin' it"};
+		  
 	int listLen = sizeof(list)/sizeof(list[0]);
 	int select = rand()% listLen;
 	return list[select];
