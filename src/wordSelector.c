@@ -286,11 +286,11 @@ static WordGroupType chooseNextWordGroup(int quantity, int index) {
 		frequency /= 100;
 		if(frequency < 1) frequency = 1;
 
-		printf("Selecting D, count %d, countPct %d, frequency %d, max %d\n", groupDcount,
-		       countPct, frequency, GROUP_D_MAX_FREQ);
+		printf("Selecting D, count %d, countPct %d, frequency %d, min %d\n", groupDcount,
+		       countPct, frequency, GROUP_D_MIN_FREQ);
 		int randNum = rand();
-		printf("rand is %d, mod is %d\n",randNum, randNum %frequency);
-		if((randNum%GROUP_D_MAX_FREQ)>frequency) return WordGroupD;
+		printf("rand is %d, mod is %d\n",randNum, randNum %GROUP_D_MIN_FREQ);
+		if((randNum%GROUP_D_MIN_FREQ)>frequency) return WordGroupD;
 		printf("didn't choose D\n");
 	}
 
