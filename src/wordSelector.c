@@ -92,7 +92,7 @@ BOOL addNewWordForReview(const char *localWord, const char *foreignWord,
 //This function is too long.......
 #define COMPETENCY_B  5
 #define COMPETENCY_C  8
-#define COMPETENCY_D  7
+#define COMPETENCY_D  10
 #define COMPETENCY_E  3
 BOOL markWordAsReviewed(WordForReview *word, BOOL result) {
 	
@@ -286,12 +286,8 @@ static WordGroupType chooseNextWordGroup(int quantity, int index) {
 		frequency /= 100;
 		if(frequency < 1) frequency = 1;
 
-		printf("Selecting D, count %d, countPct %d, frequency %d, min %d\n", groupDcount,
-		       countPct, frequency, GROUP_D_MIN_FREQ);
 		int randNum = rand();
-		printf("rand is %d, mod is %d\n",randNum, randNum %GROUP_D_MIN_FREQ);
 		if((randNum%GROUP_D_MIN_FREQ)>frequency) return WordGroupD;
-		printf("didn't choose D\n");
 	}
 
 	//choose a word randomly from group B or C
