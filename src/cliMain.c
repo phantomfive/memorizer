@@ -22,13 +22,9 @@ static void printWelcome() {
 	int wordsLearned;
 	printf("Welcome to %s!\n", language);
 	
-	// Sshow them how many words they've learned only
-	// if it's high enough, so they don't get demoralized
-	// too easily.
+	//Show them how many words they've learned
 	wordsLearned = getNumberOfWordsMemorized();
-	if(wordsLearned>21) {
-		printf("You have learned %d words so far.\n", wordsLearned);
-	}
+	printf("You have learned %d words so far.\n", wordsLearned);
 	printf("\n");
 }
 		
