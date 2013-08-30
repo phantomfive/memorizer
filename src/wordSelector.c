@@ -93,7 +93,7 @@ BOOL addNewWordForReview(const char *localWord, const char *foreignWord,
 #define COMPETENCY_B  5
 #define COMPETENCY_C  8
 #define COMPETENCY_D  10
-#define COMPETENCY_E  3
+#define COMPETENCY_E  2
 BOOL markWordAsReviewed(WordForReview *word, BOOL result) {
 	
 	//if it's wordGroupA, then we move it to B automatically, since they
