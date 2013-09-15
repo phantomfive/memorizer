@@ -332,10 +332,9 @@ static BOOL getWordForGroupD(WordForReview *word, int index) {
 }
 
 static BOOL getWordForGroupE(WordForReview *word, int index) {
-	if(rand()%2==0)
-	  return databaseFillWordFromGroupOrderByLeastSkilled(word,index,WordGroupE);
-	else
-	  return databaseFillWordFromGroupOrderByLeastRecent(word,index,WordGroupE);
+	//Always get the oldest word from group E to give it
+	//a rest before testing it again.
+	return databaseFillWordFromGroupOrderByLeastRecent(word,index,WordGroupE);
 }
 
 /**Convenience function that moves the word up a group and
