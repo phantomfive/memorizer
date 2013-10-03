@@ -212,8 +212,6 @@ static BOOL putWordsInArray(WordForReview *words, int quantity) {
 	for(i=0;i<quantity;i++) {
 		WordGroupType type = chooseNextWordGroup(quantity, i);
 
-		printf("Got selected type %d\n", type);
-	
 		//if we can't get the preffered group, go one group up.
 		if(type==WordGroupE)             rv=getWordForGroupE(words, i);
 		if(type==WordGroupD || rv==FAIL) rv=getWordForGroupD(words, i);
@@ -236,7 +234,7 @@ static BOOL putWordsInArray(WordForReview *words, int quantity) {
 #define GROUP_B_MAX 5  //we don't want to have too many new words,
                        //so this is the maximum number of new words
 							  //to be studying at a time
-#define GROUP_E_MIN 40  //must have this many in Ebefore we start reviewing them
+#define GROUP_E_MIN 50  //must have this many in Ebefore we start reviewing them
 #define GROUP_E_FREQUENCY 12 //Show E 1 out of this many times
 
 //Group D is words that are mostly learned. When there are few in this group, we
