@@ -104,8 +104,9 @@ BOOL markWordAsReviewed(WordForReview *word, BOOL result) {
 	}
 
 	//in all the other groups, adjust the competency level
-	if(result) word->competencyLevel++;
-	else       word->competencyLevel--;
+	if      (result)                 word->competencyLevel++;
+	else if (word->type==WordGroupE) word->competencyLevel -=2;
+	else                             word->competencyLevel--;
 	
 	
 	//if it's in group B, then once the competency level hits a
@@ -140,7 +141,7 @@ BOOL markWordAsReviewed(WordForReview *word, BOOL result) {
 	//gets too low, we'll move it back to D, though
 	else if(word->type==WordGroupE) {
 		if(word->competencyLevel<= -COMPETENCY_E) {
-			moveWordUpAGroup(word);
+			moveWordDownAGroup(word);
 		}
 	}
 
