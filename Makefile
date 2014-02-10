@@ -4,8 +4,8 @@
 # in a single invocation. Better yet, it's a shorter Makefile. -AT
 
 CC=gcc
-CCFLAGS=-Wall -Werror -O3 -std=c99 # -ggdb
-                                   # Uncomment -ggdb to debug
+CCFLAGS=-Wall -Werror -Wno-unneeded-internal-declaration -std=c99 # -ggdb
+                                                      # Uncomment -ggdb to debug
 LDFLAGS= -lsqlite3
 
 CSRC := $(wildcard src/*.c)
