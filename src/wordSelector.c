@@ -285,6 +285,8 @@ static WordGroupType chooseNextWordGroup(int quantity, int index) {
 		frequency /= 100;
 		if(frequency < 1) frequency = 1;
 
+		printf("countPct = %d, frequency %d, GROUP_D_MIN_FREQ %d\n",
+		       countPct, frequency, GROUP_D_MIN_FREQ); 
 		int randNum = rand();
 		if((randNum%GROUP_D_MIN_FREQ)>frequency) return WordGroupD;
 	}
