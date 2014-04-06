@@ -264,6 +264,7 @@ static WordGroupType chooseNextWordGroup(int quantity, int index) {
 		return WordGroupE;
 	}
 
+	printf("a %d, b %d, c %d, d %d e %d\n", groupAcount, groupBcount, groupCcount, groupDcount, groupEcount);
 	//If we have learned all the words in our review set, then
 	//get some more from group A and start learning them!
 	if(groupBcount+groupCcount+index < NEW_WORDS_TO_REVIEW_AT_A_TIME 
