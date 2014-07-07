@@ -47,6 +47,7 @@ static const char *compliment() {
 		  "Keep climbing the mountain, three steps at a time!",
 		  "Fabulous",
 		  "Marvelous",
+		  "I stand in awe at your mental prowess",
 		  "Good like Superman",
 		  "Rockin' it"};
 		  
