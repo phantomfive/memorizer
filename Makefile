@@ -4,7 +4,7 @@
 # in a single invocation. Better yet, it's a shorter Makefile. -AT
 
 CC=gcc
-CCFLAGS=-Wall -Werror -Wno-unneeded-internal-declaration -std=c99 # -ggdb
+CCFLAGS=-Wall -Werror -Wno-unneeded-internal-declaration -std=gnu99 # -ggdb
                                                       # Uncomment -ggdb to debug
 LDFLAGS= -lsqlite3
 
