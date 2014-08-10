@@ -14,16 +14,16 @@ HDRS := $(wildcard src/*.h)
 all: japanese russian korean japaneseCharacters
 
 japanese: $(CSRC) $(HDRS)
-	$(CC) -o japanese -D JAPANESE $(CCFLAGS) $(LDFLAGS) $(CSRC)
+	$(CC) -o japanese -D JAPANESE $(CCFLAGS) $(CSRC) $(LDFLAGS)
 
 russian: $(CSRC) $(HDRS)
-	$(CC) -o russian -D RUSSIAN $(CCFLAGS) $(LDFLAGS) $(CSRC)
+	$(CC) -o russian -D RUSSIAN $(CCFLAGS) $(CSRC) $(LDFLAGS)
 
 korean: $(CSRC) $(HDRS)
-	$(CC) -o korean -D KOREAN $(CCFLAGS) $(LDFLAGS) $(CSRC)
+	$(CC) -o korean -D KOREAN $(CCFLAGS) $(CSRC) $(LDFLAGS)
 
 japaneseCharacters: $(CSRC) $(HDRS)
-	$(CC) -o japaneseCharacters -D JAPANESE_CHARS $(CCFLAGS) $(LDFLAGS) $(CSRC)
+	$(CC) -o japaneseCharacters -D JAPANESE_CHARS $(CCFLAGS) $(CSRC) $(LDFLAGS)
 
 
 clean:

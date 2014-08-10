@@ -44,5 +44,9 @@ BOOL strncatSafe(char *dest, char *src, int destSize);
    from the beginning and end. Returns true on success, false on error.*/
 BOOL readTypedInput(char *buf, int bufLen);
 
+#ifdef __linux
+int strcasestr(const char *haystack, const char *needle);
+#endif
+
 #endif
 
