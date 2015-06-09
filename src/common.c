@@ -25,13 +25,13 @@ BOOL readTypedInput(char *buf, int bufLen) {
     
 	//chop off extra space and newlines at the end
 	len = strlen(buf);
-	while(isspace(buf[len-1])) {
+	while(isspace((int)buf[len-1])) {
 		buf[len-1] = 0;
 		len--;
 	}
     
 	//chop off extra space from the beginning
-	while(isspace(buf[spaceCount])) {
+	while(isspace((int)buf[spaceCount])) {
 		spaceCount++;
 	}
 	if(spaceCount>0) {
