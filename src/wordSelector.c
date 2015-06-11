@@ -91,7 +91,11 @@ BOOL addNewWordForReview(const char *localWord, const char *foreignWord,
 
 //This function is too long.......
 #define COMPETENCY_B  5
+#if CHARACTER_BASED == YES
+#define COMPETENCY_C 5
+#else
 #define COMPETENCY_C  8
+#endif
 #define COMPETENCY_D  10
 #define COMPETENCY_E  1
 BOOL markWordAsReviewed(WordForReview *word, BOOL result) {
