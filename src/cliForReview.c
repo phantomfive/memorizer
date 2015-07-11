@@ -49,7 +49,8 @@ static const char *compliment() {
 		  "Marvelous",
 		  "I stand in awe at your mental prowess",
 		  "Good like Superman",
-		  "Rockin' it"};
+		  "Rockin' it",
+		  "More magical than Harry Potter"};
 		  
 	int listLen = sizeof(list)/sizeof(list[0]);
 	int select = rand()% listLen;
