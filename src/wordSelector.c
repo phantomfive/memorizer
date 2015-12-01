@@ -97,7 +97,7 @@ BOOL addNewWordForReview(const char *localWord, const char *foreignWord,
 #define COMPETENCY_C  8
 #endif
 #if CHARACTER_BASED == YES
-#define COMPETENCY_D 9
+#define COMPETENCY_D 8
 #else
 #define COMPETENCY_D  10
 #endif
