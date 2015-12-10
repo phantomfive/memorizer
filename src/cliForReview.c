@@ -164,12 +164,15 @@ static BOOL checkAdvancedAnswer(WordForReview *word, char *answer) {
 			exit(-1);
 
 		//see if they typed y
-		if(!strcasecmp(input,"y")) {
+		if(!strcasecmp(input,"y") || !strcasecmp(input, "yes")) {
 			printf("Excellent! %s\n", compliment());
 			return SUCCESS;
 		}
 		else {
 			printf("ok, do better.\n");
+			if(!strcasecmp(input, "h")) {
+			   printf("fyi, the hint was %s\n", word->hint);
+			}
 		}
 	}
 
