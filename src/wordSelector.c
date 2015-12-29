@@ -10,8 +10,10 @@
 
 #include "wordSelector.h"
 
+#include "compileChoices.h"
+
 static WordForReview *tmp; //only used to get the size in the following line
-static char language[sizeof(tmp->language)] = "data";
+static char languageStr[sizeof(tmp->language)] = "data";
 
 //private methods
 static WordGroupType chooseNextWordGroup(int quantity, int index);
@@ -38,8 +40,8 @@ BOOL selectWordLanguage(const char *name) {
 	if(setWordDatabaseName(databaseName)==FAIL) return FAIL;
 
 	//store the name of the language
-	strncpy(language, name, sizeof(language)-1);
-	language[sizeof(language)-1] = 0;
+	strncpy(languageStr, name, sizeof(languageStr)-1);
+	languageStr[sizeof(language)-1] = 0;
 	return SUCCESS;
 }
 
@@ -90,9 +92,13 @@ BOOL addNewWordForReview(const char *localWord, const char *foreignWord,
 
 
 //This function is too long.......
-#define COMPETENCY_B  5
 #if CHARACTER_BASED == YES
-#define COMPETENCY_C 5
+#define COMPETENCY_B 0
+#else
+#define COMPETENCY_B  5
+#endif
+#if CHARACTER_BASED == YES
+#define COMPETENCY_C 8
 #else
 #define COMPETENCY_C  8
 #endif
