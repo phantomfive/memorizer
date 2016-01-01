@@ -254,7 +254,7 @@ static BOOL putWordsInArray(WordForReview *words, int quantity) {
 #define GROUP_D_MIN 10
 #define GROUP_D_MAX 150
 #define GROUP_D_MIN_FREQ 14
-#define GROUP_D_MAX_FREQ  2
+#define GROUP_D_MAX_FREQ  3
 
 static WordGroupType chooseNextWordGroup(int quantity, int index) {
 	int groupBcount;
