@@ -154,9 +154,6 @@ BOOL markWordAsReviewed(WordForReview *word, BOOL result) {
 		}
 	}
 
-	//ok, there was more repetition in that section than is healthy.
-	//However, I might want to change the behavior of each word type individually
-	//later on, so it's probably ok.
 	return databaseUpdateWord(word);
 }
 
@@ -219,7 +216,7 @@ static BOOL putWordsInArray(WordForReview *words, int quantity) {
 	int i=0;
 	BOOL rv = SUCCESS;
 
-	for(i=0;i<quantity;i++) {
+	for(i=quantity-1;i>=0;i--) {
 		WordGroupType type = chooseNextWordGroup(quantity, i);
 
 		//if we can't get the preffered group, go one group up.
