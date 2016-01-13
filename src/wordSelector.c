@@ -95,7 +95,7 @@ BOOL addNewWordForReview(const char *localWord, const char *foreignWord,
 #if CHARACTER_BASED == YES
 #define COMPETENCY_B  0
 #define COMPETENCY_C  8
-#define COMPETENCY_D  6
+#define COMPETENCY_D  4
 #define COMPETENCY_E  1
 #else
 #define COMPETENCY_B  5
@@ -241,8 +241,8 @@ static BOOL putWordsInArray(WordForReview *words, int quantity) {
 #define GROUP_B_MAX 5  //we don't want to have too many new words,
                        //so this is the maximum number of new words
 							  //to be studying at a time
-#define GROUP_E_MIN 50  //must have this many in Ebefore we start reviewing them
-#define GROUP_E_FREQUENCY 10 //Show E 1 out of this many times
+#define GROUP_E_MIN 50 //must have this many in E before we start reviewing them
+#define GROUP_E_FREQUENCY 8 //Show E 1 out of this many times
 
 //Group D is words that are mostly learned. When there are few in this group, we
 //don't show them very often. We start showing them when there are more than
