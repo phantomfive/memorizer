@@ -219,7 +219,7 @@ static BOOL putWordsInArray(WordForReview *words, int quantity) {
 	for(i=0;i<quantity;i++) {
 		WordGroupType type = chooseNextWordGroup(quantity, i);
 
-		//if we can't get the preffered group, go one group up.
+		//if we can't get the preffered group, try another group
 		if(type==WordGroupE)             rv=getWordForGroupE(words, i);
 		if(type==WordGroupD || rv==FAIL) rv=getWordForGroupD(words, i);
 		if(type==WordGroupC || rv==FAIL) rv=getWordForGroupC(words, i);
